@@ -1,8 +1,14 @@
+# Vscode settings
+.vscode/
+
 # Build files
 /build/
 *.o
 *.exe
 *.out
+
+# Tests files
+/tests/
 
 # MacOS specific
 .DS_Store
