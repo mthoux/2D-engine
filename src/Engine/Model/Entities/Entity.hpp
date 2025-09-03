@@ -11,6 +11,7 @@ public:
     void move(const Vec2f& delta);
 
     void setPosition(const Vec2f& newPosition) { shape.setPosition(newPosition); }
+    const Hitbox& getHitbox() const { return hitbox; }
     Vec2f getPosition() const { return shape.getPosition(); }
     Vec2f getSize() const { return shape.getSize(); }
     sf::Color getColor() const { return color; }

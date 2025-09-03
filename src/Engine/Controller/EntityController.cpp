@@ -14,19 +14,12 @@ void EntityController::handleInput(Entity& entity) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_LEFT)) delta.x -= 1.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_RIGHT)) delta.x += 1.f;
 
-    // Normalize delta to have consistent speed in all directions
+    
+    // Normaliser pour vitesse constante en diagonale
     if (delta.x != 0.f || delta.y != 0.f) {
-        float len = std::sqrt(delta.x*delta.x + delta.y*delta.y);
+        float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
         delta /= len;
         delta *= float(PIXELS_DISPLACEMENT);
+        entity.move(delta);
     }
-
-    Vec2f nextPos = entity.getPosition() + delta;
-    
-    // auto tile = map.getTileAt(nextPos.x, nextPos.y);
-    // if (tile && (*tile)->isWalkable()) {
-    //     entity.move(delta);
-    // }
-
-    entity.move(delta);
 }

@@ -7,8 +7,5 @@
 *.exe
 *.out
 
-# Tests files
-/tests/
-
 # MacOS specific
 .DS_Store

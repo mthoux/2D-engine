@@ -18,7 +18,7 @@ Hitbox::Hitbox(Vec2f pos, Vec2f size) {
 }
 
 // Collision AABB simple
-bool Hitbox::intersects(const Hitbox& other) const {
+bool Hitbox::intersects(const Shape& other) const {
     auto vertsA = getWorldVertices();
     auto vertsB = other.getWorldVertices();
 

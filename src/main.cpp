@@ -27,6 +27,7 @@ int main()
     Mapper mapper;
     VertexObject tileVO = mapper.vmap(tileMap);
     Entity player({TILE_SIZE,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Red);
+    Entity opponent({TILE_SIZE*2,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Yellow);
     EntityController controller(tileMap);
 
     // run the main loop
@@ -58,6 +59,7 @@ int main()
         window.clear();
         window.draw(tileVO);
         window.draw(mapper.vmap(player));
+        window.draw(mapper.vmap(opponent));
         window.setView(view);
         window.display();
     }

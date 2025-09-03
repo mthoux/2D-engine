@@ -16,6 +16,7 @@ public:
 
     Vec2f getPosition() const { return shape.getPosition(); }
     Vec2f getSize() const { return shape.getSize(); }
+    RectangleShape getShape() const { return shape; }
     sf::Color   getColor() const { return color; }
     Type        getType() const { return type; }
     bool        isWalkable() const { return walkable; }
