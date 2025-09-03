@@ -1,6 +1,7 @@
 #pragma once
 #include "../Components/Vec2f.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include "../Components/RectangleShape.hpp"
 
 class Tile
 {
@@ -11,18 +12,16 @@ public:
         WATER
     };
     Tile();
-    Tile(Type type, Vec2f position, Vec2f size, sf::Color color = sf::Color::White, bool walkable = true);
+    Tile(Type type, Vec2f position, Vec2f size, sf::Color color, bool walkable);
 
-    Vec2f getPosition() const { return position; }
-    Vec2f getSize() const { return size; }
-    sf::Color   getColor() const { return color; }
+    Vec2f getPosition() const { return shape.getPosition(); }
+    Vec2f getSize() const { return shape.getSize(); }
+    sf::Color   getColor() const { return shape.getColor(); }
     Type        getType() const { return type; }
     bool        isWalkable() const { return walkable; }
 
 private:
 Type type;
-Vec2f position;
-Vec2f size;
-sf::Color color;
+RectangleShape shape;
 bool walkable;
 };

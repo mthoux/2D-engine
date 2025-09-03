@@ -1,7 +1,7 @@
 #include "EntityController.hpp"
 #include <cmath>
 #include "../Configurations.hpp"
-#include "../Model/Tile.hpp"
+#include "../Model/Entities/Tile.hpp"
 
 EntityController::EntityController(TileMap& map) : map(&map) {}
 

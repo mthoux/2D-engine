@@ -5,8 +5,8 @@ VertexObject Mapper::vmap(Tile tile) {
 
     sf::VertexArray vertices(sf::PrimitiveType::Triangles, 6);
 
-    sf::Vector2f position = tile.getPosition();
-    sf::Vector2f size = tile.getSize();
+    sf::Vector2f position = toSFML(tile.getPosition());
+    sf::Vector2f size = toSFML(tile.getSize());
     sf::Color color = tile.getColor();
 
     vertices[0].position = position;                                  
