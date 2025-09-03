@@ -5,11 +5,10 @@
 
 class RectangleShape : public Shape {
 public:
-    RectangleShape(const Vec2f& position, const Vec2f& size, const sf::Color& color = sf::Color::White);
+    RectangleShape(const Vec2f& position, const Vec2f& size);
 
-    Vec2f getSize() const;
+    Vec2f getSize() const  {return size;}
     void setSize(const Vec2f& newSize);
-    sf::Color getColor() const { return color; }
 
 private:
     Vec2f size;

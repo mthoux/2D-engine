@@ -1,9 +1,9 @@
 #include "Tile.hpp"
 
 Tile::Tile() 
-    : type(GRASS), shape({0,0}, {0,0}, sf::Color::White), walkable(true) 
+    : type(GRASS), shape({0,0}, {0,0}), color(sf::Color::White), walkable(true) 
 {}
 
 Tile::Tile(Type type, Vec2f position, Vec2f size, sf::Color color, bool walkable)
-    : type(type), shape(position, size, color), walkable(walkable) 
+    : type(type), shape(position, size), color(color), walkable(walkable) 
 {}

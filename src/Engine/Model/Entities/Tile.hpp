@@ -16,12 +16,13 @@ public:
 
     Vec2f getPosition() const { return shape.getPosition(); }
     Vec2f getSize() const { return shape.getSize(); }
-    sf::Color   getColor() const { return shape.getColor(); }
+    sf::Color   getColor() const { return color; }
     Type        getType() const { return type; }
     bool        isWalkable() const { return walkable; }
 
 private:
 Type type;
 RectangleShape shape;
+sf::Color color;
 bool walkable;
 };
