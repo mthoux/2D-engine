@@ -3,7 +3,7 @@
 using namespace sf;
 
 Tile::Tile() 
-    : type(Grass), position({0,0}), size({0,0}), color(sf::Color::White) 
+    : type(GRASS), position({0,0}), size({0,0}), color(sf::Color::White) 
 {}
 
 Tile::Tile(Type type, Vector2f position, Vector2f size, Color color)
