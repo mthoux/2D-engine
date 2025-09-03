@@ -1,7 +1,7 @@
 #pragma once
-#include "../Model/Tile.hpp"
-#include "../Model/TileMap.hpp"
-#include "../Model/Entity.hpp"
+#include "../Model/Entities/Tile.hpp"
+#include "../Model/Entities/TileMap.hpp"
+#include "../Model/Entities/Entity.hpp"
 #include "VertexObject.hpp"
 
 class Mapper {

@@ -1,7 +1,7 @@
 #pragma once
-#include "../Model/Entity.hpp"
+#include "../Model/Entities/Entity.hpp"
 #include <SFML/Window/Keyboard.hpp>
-#include "../Model/TileMap.hpp"
+#include "../Model/Entities/TileMap.hpp"
 
 class EntityController {
 public:

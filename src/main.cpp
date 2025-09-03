@@ -2,14 +2,15 @@
 #include <iostream>
 #include <SFML/Window/Event.hpp>
 
-#include "Engine/Model/Tile.hpp"
-#include "Engine/Model/TileMap.hpp"
+#include "Engine/Model/Entities/Tile.hpp"
+#include "Engine/Model/Entities/TileMap.hpp"
 #include "Engine/View/Mapper.hpp"
 #include "Utils/MapGenerator.hpp"
 #include "Engine/View/VertexObject.hpp"
-#include "Engine/Model/Entity.hpp"
+#include "Engine/Model/Entities/Entity.hpp"
 #include "Engine/Controller/EntityController.hpp"
 #include "Engine/Configurations.hpp"
+#include "Engine/Model/Components/Vec2f.hpp"
 
 int main()
 {

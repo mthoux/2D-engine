@@ -1,7 +1,7 @@
 #include "TileMap.hpp"
 #include <iostream>
 
-TileMap::TileMap(sf::Vector2f tileSize, const std::vector<std::vector<int>>& level, sf::Vector2f levelSize)
+TileMap::TileMap(Vec2f tileSize, const std::vector<std::vector<int>>& level, Vec2f levelSize)
     : tileSize(tileSize), levelSize(levelSize)
 {
     int height = static_cast<int>(levelSize.x);
