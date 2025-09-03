@@ -1,19 +1,19 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "../Components/Vec2f.hpp"
+#include "SFML/Graphics/Color.hpp"
+#include "../Components/RectangleShape.hpp"
 
 class Entity {
 public:
     Entity(); 
-    Entity(sf::Vector2f position, sf::Vector2f size, sf::Color color = sf::Color::White);
-    void move(const sf::Vector2f& delta);
+    Entity(Vec2f position, Vec2f size, sf::Color color = sf::Color::White);
+    void move(const Vec2f& delta);
 
-    void setPosition(const sf::Vector2f& newPosition);
-    sf::Vector2f getPosition() const;
-    sf::Vector2f getSize() const;
-    sf::Color getColor() const;
+    void setPosition(const Vec2f& newPosition) { shape.setPosition(newPosition); }
+    Vec2f getPosition() const { return shape.getPosition(); }
+    Vec2f getSize() const { return shape.getSize(); }
+    sf::Color getColor() const { return shape.getColor(); }
 
 private:
-    sf::Vector2f position;
-    sf::Vector2f size;
-    sf::Color color;
+    RectangleShape shape;
 };

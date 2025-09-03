@@ -45,8 +45,8 @@ VertexObject Mapper::vmap(Entity entity) {
 
     sf::VertexArray vertices(sf::PrimitiveType::Triangles, 6);
 
-    sf::Vector2f position = entity.getPosition();
-    sf::Vector2f size = entity.getSize();
+    sf::Vector2f position = toSFML(entity.getPosition());
+    sf::Vector2f size = toSFML(entity.getSize());
     sf::Color color = entity.getColor();
 
     vertices[0].position = position;                                  

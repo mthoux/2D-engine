@@ -2,11 +2,12 @@
 #include <cmath>
 #include "../Configurations.hpp"
 #include "../Model/Entities/Tile.hpp"
+#include "../Model/Components/Vec2f.hpp"
 
 EntityController::EntityController(TileMap& map) : map(&map) {}
 
 void EntityController::handleInput(Entity& entity) {
-    sf::Vector2f delta(0.f, 0.f);
+    Vec2f delta(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_UP)) delta.y -= 1.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_DOWN)) delta.y += 1.f;
@@ -20,7 +21,7 @@ void EntityController::handleInput(Entity& entity) {
         delta *= float(PIXELS_DISPLACEMENT);
     }
 
-    sf::Vector2f nextPos = entity.getPosition() + delta;
+    Vec2f nextPos = entity.getPosition() + delta;
     
     // auto tile = map.getTileAt(nextPos.x, nextPos.y);
     // if (tile && (*tile)->isWalkable()) {
