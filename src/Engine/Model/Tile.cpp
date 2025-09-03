@@ -3,9 +3,9 @@
 using namespace sf;
 
 Tile::Tile() 
-    : type(GRASS), position({0,0}), size({0,0}), color(sf::Color::White) 
+    : type(GRASS), position({0,0}), size({0,0}), color(sf::Color::White), walkable(true) 
 {}
 
-Tile::Tile(Type type, Vector2f position, Vector2f size, Color color)
-    : type(type), position(position), size(size), color(color) 
+Tile::Tile(Type type, Vector2f position, Vector2f size, Color color, bool walkable)
+    : type(type), position(position), size(size), color(color), walkable(walkable) 
 {}

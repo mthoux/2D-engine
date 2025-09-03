@@ -5,9 +5,9 @@ VertexObject Mapper::vmap(Tile tile) {
 
     sf::VertexArray vertices(sf::PrimitiveType::Triangles, 6);
 
-    sf::Vector2f position = tile.position;
-    sf::Vector2f size = tile.size;
-    sf::Color color = tile.color;
+    sf::Vector2f position = tile.getPosition();
+    sf::Vector2f size = tile.getSize();
+    sf::Color color = tile.getColor();
 
     vertices[0].position = position;                                  
     vertices[1].position = position + sf::Vector2f(size.x, 0);     
@@ -25,7 +25,7 @@ VertexObject Mapper::vmap(Tile tile) {
 }
 
 VertexObject Mapper::vmap(TileMap tileMap) {
-    sf::VertexArray vertices(sf::PrimitiveType::Triangles, 6*tileMap.levelSize.x*tileMap.levelSize.y);
+    sf::VertexArray vertices(sf::PrimitiveType::Triangles, 6*tileMap.getLevelSize().x*tileMap.getLevelSize().y);
 
     for (const  std::vector<Tile>& row : tileMap.tiles) {
         for (const Tile& tile : row) {

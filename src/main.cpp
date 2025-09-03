@@ -18,17 +18,15 @@ int main()
     window.setFramerateLimit(60);
     sf::View view(sf::Vector2f(WINDOW_HEIGHT/2, WINDOW_WIDTH/2), sf::Vector2f(window.getSize().x, window.getSize().y));
 
-    Mapper mapper;
-    Entity player({TILE_SIZE,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Red);
-    EntityController controller;
-
-
     int width = WINDOW_WIDTH / TILE_SIZE;
     int height = WINDOW_HEIGHT / TILE_SIZE;
     std::vector<std::vector<int>> level2 = generateMap(width, height);
 
     TileMap tileMap({TILE_SIZE, TILE_SIZE}, level2, {float(height), float(width)});
+    Mapper mapper;
     VertexObject tileVO = mapper.vmap(tileMap);
+    Entity player({TILE_SIZE,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Red);
+    EntityController controller(tileMap);
 
     // run the main loop
     while (window.isOpen())

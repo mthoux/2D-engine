@@ -2,7 +2,7 @@
 #include <iostream>
 
 TileMap::TileMap(sf::Vector2f tileSize, const std::vector<std::vector<int>>& level, sf::Vector2f levelSize)
-    : levelSize(levelSize)
+    : tileSize(tileSize), levelSize(levelSize)
 {
     int height = static_cast<int>(levelSize.x);
     int width  = static_cast<int>(levelSize.y);
@@ -24,27 +24,43 @@ TileMap::TileMap(sf::Vector2f tileSize, const std::vector<std::vector<int>>& lev
             
             sf::Color color = sf::Color::Transparent;
             Tile::Type type = Tile::NONE;
+            bool walkable = true;
 
             switch (tileType)
             {
             case 0:
                 color = sf::Color::Black;
                 type  = Tile::NONE;
+                walkable = true;
                 break;
             case 1:
                 color = sf::Color::Green;
                 type  = Tile::GRASS;
+                walkable = true;
                 break;
             case 2:
                 color = sf::Color::Blue;
                 type  = Tile::WATER;
+                walkable = false;
                 break;
             default:
                 std::cerr << "Unknown tile type: " << tileType << "\n";
                 break;
             }
 
-            tiles[y][x] = Tile(type, {x * tileSize.x, y * tileSize.y}, tileSize, color);
+            tiles[y][x] = Tile(type, {x * tileSize.x, y * tileSize.y}, tileSize, color, walkable);
         }
     }
+}
+
+std::optional<Tile*> TileMap::getTileAt(float x, float y) {
+    int tx = static_cast<int>(x / tileSize.x);
+    int ty = static_cast<int>(y / tileSize.y);
+
+    if (ty < 0 || ty >= tiles.size() || tx < 0 || tx >= tiles[0].size()) {
+        std::cerr << "Warning: accessing out-of-bounds tile at (" << tx << "," << ty << ")\n";
+        return std::nullopt;
+    }
+
+    return &tiles[ty][tx];
 }

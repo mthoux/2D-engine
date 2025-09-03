@@ -1,6 +1,9 @@
 #include "EntityController.hpp"
 #include <cmath>
 #include "../Configurations.hpp"
+#include "../Model/Tile.hpp"
+
+EntityController::EntityController(TileMap& map) : map(&map) {}
 
 void EntityController::handleInput(Entity& entity) {
     sf::Vector2f delta(0.f, 0.f);
@@ -16,6 +19,13 @@ void EntityController::handleInput(Entity& entity) {
         delta /= len;
         delta *= float(PIXELS_DISPLACEMENT);
     }
+
+    sf::Vector2f nextPos = entity.getPosition() + delta;
+    
+    // auto tile = map.getTileAt(nextPos.x, nextPos.y);
+    // if (tile && (*tile)->isWalkable()) {
+    //     entity.move(delta);
+    // }
 
     entity.move(delta);
 }
