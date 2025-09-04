@@ -8,7 +8,7 @@ class TileMap {
 public:
     TileMap(Vec2f tileSize, const std::vector<std::vector<int>>& level, Vec2f levelSize);
     std::vector<std::vector<Tile>> tiles;
-    std::optional<Tile*> getTileAt(float x, float y);
+    std::optional<Tile*> getTileAt(const Vec2f& position);
 
     Vec2f getTileSize() const { return tileSize; }
     Vec2f getLevelSize() const { return levelSize; }

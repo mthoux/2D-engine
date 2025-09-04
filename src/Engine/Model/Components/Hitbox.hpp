@@ -1,13 +1,18 @@
 #pragma once
 #include "Shape.hpp"
 
-class Hitbox : public Shape {
+class Hitbox {
 public:
-    // Constructeurs
-    Hitbox();
-    Hitbox(const std::vector<Vec2f>& vertices, Vec2f pos = {0.f, 0.f});
-    Hitbox(Vec2f pos, Vec2f size);
+    Hitbox(Shape shape)
+        : shape(shape) {}
+
+    void translate(const Vec2f& pos) {
+        shape.translate(pos);
+    }
 
     // Collision avec une forme
     bool intersects(const Shape& other) const;
+    //const Shape getShape() { return shape };
+private:
+    Shape shape;
 };

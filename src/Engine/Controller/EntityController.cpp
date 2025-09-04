@@ -1,25 +1,38 @@
 #include "EntityController.hpp"
 #include <cmath>
 #include "../Configurations.hpp"
-#include "../Model/Entities/Tile.hpp"
 #include "../Model/Components/Vec2f.hpp"
 
-EntityController::EntityController(TileMap& map) : map(&map) {}
+EntityController::EntityController(TileMap& map, bool gridMode)
+    : map(&map), useGridMovement(gridMode) {}
 
 void EntityController::handleInput(Entity& entity) {
     Vec2f delta(0.f, 0.f);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_UP)) delta.y -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_DOWN)) delta.y += 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_LEFT)) delta.x -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_UP))    delta.y -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_DOWN))  delta.y += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_LEFT))  delta.x -= 1.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::KEY_RIGHT)) delta.x += 1.f;
 
-    
+    // Rien à faire si pas de mouvement
+    if (delta.x == 0.f && delta.y == 0.f) return;
+
     // Normaliser pour vitesse constante en diagonale
-    if (delta.x != 0.f || delta.y != 0.f) {
-        float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
-        delta /= len;
-        delta *= float(PIXELS_DISPLACEMENT);
-        entity.move(delta);
+    float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+    delta /= len;
+    delta *= float(PIXELS_DISPLACEMENT);
+
+    // Calcul de la prochaine position
+    Vec2f nextPos = entity.getPosition() + delta;
+
+    if (useGridMovement) {
+        // Snap à la grille
+        Vec2f tileSize = map->getTileSize();
+        int tileX = static_cast<int>(nextPos.x / tileSize.x);
+        int tileY = static_cast<int>(nextPos.y / tileSize.y);
+        nextPos = Vec2f(tileX * tileSize.x, tileY * tileSize.y);
     }
+
+    // Appliquer le déplacement
+    entity.translate(nextPos);
 }

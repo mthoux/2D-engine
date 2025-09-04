@@ -1,25 +1,9 @@
 #include "Hitbox.hpp"
 #include <algorithm>
 
-// Constructeurs
-Hitbox::Hitbox() : Shape() {}
-
-Hitbox::Hitbox(const std::vector<Vec2f>& vertices, Vec2f pos)
-    : Shape(vertices, pos) {}
-
-Hitbox::Hitbox(Vec2f pos, Vec2f size) {
-    position = pos;
-    vertices = {
-        {0.f, 0.f},
-        {size.x, 0.f},
-        {size.x, size.y},
-        {0.f, size.y}
-    };
-}
-
 // Collision AABB simple
 bool Hitbox::intersects(const Shape& other) const {
-    auto vertsA = getWorldVertices();
+    auto vertsA = shape.getWorldVertices();
     auto vertsB = other.getWorldVertices();
 
     float minAX = vertsA[0].x, maxAX = vertsA[0].x;

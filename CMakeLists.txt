@@ -6,41 +6,43 @@ cmake_minimum_required(VERSION 3.16)
 project(2DEngine)
 
 # ----------------------------------------------------------
-# Utiliser C++17
+# C++17
 # ----------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ----------------------------------------------------------
-# Inclure les dossiers de headers
+# Include directories
 # ----------------------------------------------------------
 include_directories(src)
 include_directories("/opt/homebrew/Cellar/sfml/3.0.1/include")
 
 # ----------------------------------------------------------
-# Lister tous les fichiers cpp du moteur
+# Lister tous les fichiers cpp du moteur (sans main.cpp)
 # ----------------------------------------------------------
-file(GLOB_RECURSE SRC
+file(GLOB_RECURSE ENGINE_SRC
     "src/*.cpp"
 )
+list(FILTER ENGINE_SRC EXCLUDE REGEX "src/main.cpp")  # exclut le main du jeu
 
 # ----------------------------------------------------------
-# Créer l'exécutable principal
+# Créer une librairie statique pour le moteur
 # ----------------------------------------------------------
-add_executable(game ${SRC})
+add_library(engine STATIC ${ENGINE_SRC})
+target_include_directories(engine PUBLIC src)
 
-# ----------------------------------------------------------
-# Lier les bibliothèques SFML directement
-# ----------------------------------------------------------
-target_link_libraries(game
+# Lier SFML à la librairie moteur
+target_link_libraries(engine
     "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-graphics.dylib"
     "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-window.dylib"
     "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-system.dylib"
 )
 
 # ----------------------------------------------------------
-# Options supplémentaires (warnings)
+# Créer l'exécutable principal (jeu)
 # ----------------------------------------------------------
+add_executable(game src/main.cpp)
+target_link_libraries(game PRIVATE engine)
 target_compile_options(game PRIVATE -Wall -Wextra)
 
 # ==========================================================
@@ -57,19 +59,21 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(catch2)
 
 # ----------------------------------------------------------
-# Créer l'exécutable des tests
+# Lister tous les fichiers cpp dans tests/
 # ----------------------------------------------------------
-# Liste tous les fichiers cpp dans tests/
 file(GLOB_RECURSE TEST_SRC
     "tests/*.cpp"
 )
 
-# Crée l'exécutable tests avec tous les fichiers trouvés
+# ----------------------------------------------------------
+# Créer l'exécutable des tests (Catch2)
+# ----------------------------------------------------------
 add_executable(tests ${TEST_SRC})
+target_link_libraries(tests PRIVATE engine Catch2::Catch2WithMain)
 
-# Lier Catch2
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+# Inclure les headers
+target_include_directories(tests PRIVATE src)
+target_include_directories(tests PRIVATE ${catch2_SOURCE_DIR}/single_include)
 
-# Include directories
-target_include_directories(tests PRIVATE src)  # tes headers
-target_include_directories(tests PRIVATE ${catch2_SOURCE_DIR}/single_include)  # Catch2
+# Warnings pour tests
+target_compile_options(tests PRIVATE -Wall -Wextra)

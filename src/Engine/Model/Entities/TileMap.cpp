@@ -53,9 +53,9 @@ TileMap::TileMap(Vec2f tileSize, const std::vector<std::vector<int>>& level, Vec
     }
 }
 
-std::optional<Tile*> TileMap::getTileAt(float x, float y) {
-    int tx = static_cast<int>(x / tileSize.x);
-    int ty = static_cast<int>(y / tileSize.y);
+std::optional<Tile*> TileMap::getTileAt(const Vec2f& position) {
+    int tx = static_cast<int>(position.x / tileSize.x);
+    int ty = static_cast<int>(position.y / tileSize.y);
 
     if (ty < 0 || ty >= tiles.size() || tx < 0 || tx >= tiles[0].size()) {
         std::cerr << "Warning: accessing out-of-bounds tile at (" << tx << "," << ty << ")\n";

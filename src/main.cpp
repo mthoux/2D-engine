@@ -6,7 +6,6 @@
 #include "Engine/Model/Entities/TileMap.hpp"
 #include "Engine/View/Mapper.hpp"
 #include "Utils/MapGenerator.hpp"
-#include "Engine/View/VertexObject.hpp"
 #include "Engine/Model/Entities/Entity.hpp"
 #include "Engine/Controller/EntityController.hpp"
 #include "Engine/Configurations.hpp"
@@ -25,10 +24,10 @@ int main()
 
     TileMap tileMap({TILE_SIZE, TILE_SIZE}, level2, {float(height), float(width)});
     Mapper mapper;
-    VertexObject tileVO = mapper.vmap(tileMap);
-    Entity player({TILE_SIZE,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Red);
+    sf::VertexArray tileVO = mapper.vmap(tileMap);
+    Entity player({0,0}, {TILE_SIZE,TILE_SIZE}, sf::Color::Red);
     Entity opponent({TILE_SIZE*2,TILE_SIZE}, {TILE_SIZE,TILE_SIZE}, sf::Color::Yellow);
-    EntityController controller(tileMap);
+    EntityController controller(tileMap, false);
 
     // run the main loop
     while (window.isOpen())

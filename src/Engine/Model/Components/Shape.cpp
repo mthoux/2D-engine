@@ -1,6 +1,6 @@
 #include "Shape.hpp"
 
-void Shape::setPosition(const Vec2f& pos) {
+void Shape::translate(const Vec2f& pos) {
     position = pos;
 }
 
