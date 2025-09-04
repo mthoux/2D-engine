@@ -1,10 +1,10 @@
 #include "RectangleShape.hpp"
 
 // Constructeur
-RectangleShape::RectangleShape(const Vec2f& position, const Vec2f& size)
-    : Shape(position), size(size)
+RectangleShape::RectangleShape(const Vec2f& position, const Vec2f& size, Vec2f origin)
+    : Shape(position, origin), size(size)
 {
-    updateVertices();
+    buildVertices();
 }
 
 // Getter
@@ -15,18 +15,15 @@ Vec2f RectangleShape::getSize() const {
 // Setter
 void RectangleShape::setSize(const Vec2f& newSize) {
     size = newSize;
-    updateVertices();
+    buildVertices();
 }
 
 // Met à jour les vertices locales (centrées sur 0,0)
-void RectangleShape::updateVertices() {
+void RectangleShape::buildVertices(){
     vertices.clear();
 
-    float halfWidth  = size.x / 2.f;
-    float halfHeight = size.y / 2.f;
-
-    vertices.push_back({-halfWidth, -halfHeight}); // top-left
-    vertices.push_back({ halfWidth, -halfHeight}); // top-right
-    vertices.push_back({ halfWidth,  halfHeight}); // bottom-right
-    vertices.push_back({-halfWidth,  halfHeight}); // bottom-left
+    vertices.push_back({0.f, 0.f});               // top-left
+    vertices.push_back({size.x, 0.f});            // top-right
+    vertices.push_back({size.x, size.y});         // bottom-right
+    vertices.push_back({0.f, size.y});            // bottom-left
 }

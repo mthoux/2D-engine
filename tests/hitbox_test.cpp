@@ -4,8 +4,8 @@
 #include "catch2/catch_all.hpp"
 
 
-RectangleShape s({0,0}, {1,1});
-RectangleShape s2({4,4}, {1,1});
+RectangleShape s({0,0}, {1,1}, {0,0});
+RectangleShape s2({4,4}, {1,1}, {0,0});
 Hitbox h1(s);
 Hitbox h2(s2);
 

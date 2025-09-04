@@ -5,12 +5,12 @@
 
 class RectangleShape : public Shape {
 public:
-    RectangleShape(const Vec2f& position, const Vec2f& size);
+    RectangleShape(const Vec2f& position, const Vec2f& size, Vec2f origin);
 
     Vec2f getSize() const;
     void setSize(const Vec2f& newSize);
 
 private:
     Vec2f size;
-    void updateVertices();
+    void buildVertices();
 };
