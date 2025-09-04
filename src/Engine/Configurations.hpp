@@ -11,4 +11,4 @@
 #define KEY_DOWN        S
 #define KEY_RIGHT       D
 
-#define PIXELS_DISPLACEMENT (TILE_SIZE/2)
+#define PIXELS_DISPLACEMENT  1000

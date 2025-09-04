@@ -11,7 +11,7 @@ public:
     EntityController(TileMap& map, bool gridMode = false);
 
     // Gestion de l'entrée clavier pour une entité
-    void handleInput(Entity& entity);
+    void handleInput(Entity& entity, float dt);
 
 private:
     TileMap* map;           // Référence à la carte de tiles

@@ -19,7 +19,7 @@ void RectangleShape::setSize(const Vec2f& newSize) {
 }
 
 // Met à jour les vertices locales (centrées sur 0,0)
-void RectangleShape::buildVertices(){
+void RectangleShape::buildVertices() {
     vertices.clear();
 
     vertices.push_back({0.f, 0.f});               // top-left
