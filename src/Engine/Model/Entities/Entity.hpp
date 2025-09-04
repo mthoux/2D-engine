@@ -1,7 +1,7 @@
 #pragma once
-#include "../Components/Vec2f.hpp"
+#include "../Geometry/Vec2f.hpp"
 #include "SFML/Graphics/Color.hpp"
-#include "../Components/RectangleShape.hpp"
+#include "../Geometry/RectangleShape.hpp"
 #include "../Components/Hitbox.hpp"
 #include <algorithm>
 
@@ -16,8 +16,6 @@ public:
 
     void translate(const Vec2f& newPosition) {
         position = newPosition;
-        shape.translate(position);
-        hitbox.translate(position);
     }
 
     // Getters

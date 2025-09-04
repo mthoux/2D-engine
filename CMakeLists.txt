@@ -12,34 +12,40 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ----------------------------------------------------------
-# Include directories
+# SFML
 # ----------------------------------------------------------
-include_directories(src)
-include_directories("/opt/homebrew/Cellar/sfml/3.0.1/include")
+set(SFML_ROOT "/opt/homebrew/Cellar/sfml/3.0.1")
+include_directories(${SFML_ROOT}/include)
 
 # ----------------------------------------------------------
-# Lister tous les fichiers cpp du moteur (sans main.cpp)
+# Fichiers source du moteur (tous les .cpp dans src/, sans main.cpp)
 # ----------------------------------------------------------
-file(GLOB_RECURSE ENGINE_SRC
-    "src/*.cpp"
-)
-list(FILTER ENGINE_SRC EXCLUDE REGEX "src/main.cpp")  # exclut le main du jeu
+file(GLOB_RECURSE ENGINE_SRC "src/*.cpp")
+list(FILTER ENGINE_SRC EXCLUDE REGEX "src/main.cpp")
 
-# ----------------------------------------------------------
-# Créer une librairie statique pour le moteur
-# ----------------------------------------------------------
 add_library(engine STATIC ${ENGINE_SRC})
-target_include_directories(engine PUBLIC src)
 
-# Lier SFML à la librairie moteur
+# Inclure tous les headers du moteur automatiquement
+file(GLOB_RECURSE ENGINE_HEADERS "src/*.hpp" "src/*.h")
+set(ENGINE_HEADER_DIRS "")
+foreach(f ${ENGINE_HEADERS})
+    get_filename_component(dir ${f} DIRECTORY)
+    list(APPEND ENGINE_HEADER_DIRS ${dir})
+endforeach()
+list(REMOVE_DUPLICATES ENGINE_HEADER_DIRS)
+target_include_directories(engine PUBLIC ${ENGINE_HEADER_DIRS})
+
+# ----------------------------------------------------------
+# Lier SFML
+# ----------------------------------------------------------
 target_link_libraries(engine
-    "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-graphics.dylib"
-    "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-window.dylib"
-    "/opt/homebrew/Cellar/sfml/3.0.1/lib/libsfml-system.dylib"
+    ${SFML_ROOT}/lib/libsfml-graphics.dylib
+    ${SFML_ROOT}/lib/libsfml-window.dylib
+    ${SFML_ROOT}/lib/libsfml-system.dylib
 )
 
 # ----------------------------------------------------------
-# Créer l'exécutable principal (jeu)
+# Exécutable principal (jeu)
 # ----------------------------------------------------------
 add_executable(game src/main.cpp)
 target_link_libraries(game PRIVATE engine)
@@ -59,21 +65,17 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(catch2)
 
 # ----------------------------------------------------------
-# Lister tous les fichiers cpp dans tests/
+# Fichiers de tests
 # ----------------------------------------------------------
-file(GLOB_RECURSE TEST_SRC
-    "tests/*.cpp"
-)
+file(GLOB_RECURSE TEST_SRC "tests/*.cpp")
 
-# ----------------------------------------------------------
-# Créer l'exécutable des tests (Catch2)
-# ----------------------------------------------------------
-add_executable(tests ${TEST_SRC})
-target_link_libraries(tests PRIVATE engine Catch2::Catch2WithMain)
-
-# Inclure les headers
-target_include_directories(tests PRIVATE src)
-target_include_directories(tests PRIVATE ${catch2_SOURCE_DIR}/single_include)
-
-# Warnings pour tests
-target_compile_options(tests PRIVATE -Wall -Wextra)
+# Créer l'exécutable des tests uniquement si des fichiers existent
+if(TEST_SRC)
+    add_executable(tests ${TEST_SRC})
+    target_link_libraries(tests PRIVATE engine Catch2::Catch2WithMain)
+    target_include_directories(tests PRIVATE
+        ${ENGINE_HEADER_DIRS}
+        ${catch2_SOURCE_DIR}/single_include
+    )
+    target_compile_options(tests PRIVATE -Wall -Wextra)
+endif()

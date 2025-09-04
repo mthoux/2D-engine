@@ -1,8 +1,8 @@
 #include "RectangleShape.hpp"
 
 // Constructeur
-RectangleShape::RectangleShape(const Vec2f& position, const Vec2f& size, Vec2f origin)
-    : Shape(position, origin), size(size)
+RectangleShape::RectangleShape(const Vec2f& size, Vec2f origin)
+    : Shape(origin), size(size)
 {
     buildVertices();
 }

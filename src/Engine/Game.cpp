@@ -49,8 +49,8 @@ void Game::render() {
     window.setView(view);
 
     window.draw(mapper.vmap(tileMap));
-    window.draw(mapper.vmap(player.getShape(), player.getColor()));
-    window.draw(mapper.vmap(opponent.getShape(), opponent.getColor()));
+    window.draw(mapper.vmap(player.getShape(), player.getPosition(), player.getColor()));
+    window.draw(mapper.vmap(opponent.getShape(), opponent.getPosition(), opponent.getColor()));
     //window.draw(mapper.vmap(player.getHitbox().getShape(), sf::Color::Magenta));
 
     window.display();

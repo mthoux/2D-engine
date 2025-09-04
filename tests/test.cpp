@@ -1,4 +1,4 @@
-#include "../src/Engine/Model/Components/Vec2f.hpp"
+#include "../src/Engine/Model/Geometry/Vec2f.hpp"
 #include "catch2/catch_all.hpp"
 
 TEST_CASE("Test vecteur") {
