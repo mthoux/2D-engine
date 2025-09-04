@@ -6,7 +6,7 @@ sf::VertexArray Mapper::vmap(const TileMap& tileMap) {
 
     for (const std::vector<Tile>& row : tileMap.tiles) {
         for (const Tile& tile : row) {
-            sf::VertexArray tileVertices = vmap(tile);
+            sf::VertexArray tileVertices = vmap(tile.getShape(), tile.getColor());
             for (int j = 0; j < 6; ++j) {
                 vertices.append(tileVertices[j]);
             }
@@ -14,16 +14,6 @@ sf::VertexArray Mapper::vmap(const TileMap& tileMap) {
     }
 
     return vertices;
-}
-
-// --- Tiles ---
-sf::VertexArray Mapper::vmap(const Tile& tile) {
-    return vmap(tile.getShape(), tile.getColor());
-}
-
-// --- Entities ---
-sf::VertexArray Mapper::vmap(const Entity& entity) {
-    return vmap(entity.getShape(), entity.getColor());
 }
 
 // For Shapes

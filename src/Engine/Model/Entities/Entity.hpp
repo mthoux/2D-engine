@@ -15,15 +15,17 @@ public:
     void move(const Vec2f& delta);
 
     void translate(const Vec2f& newPosition) {
-        shape.translate(newPosition);
-        hitbox.translate(newPosition);
+        position = newPosition;
+        shape.translate(position);
+        hitbox.translate(position);
     }
 
+    // Getters
     const Hitbox& getHitbox() const { return hitbox; }
-    Vec2f getPosition() const { return shape.getPosition(); }
+    Vec2f getPosition() const { return position; }
     Vec2f getSize() const { return shape.getSize(); }
     sf::Color getColor() const { return color; }
-    RectangleShape getShape() const { return shape; }
+    const RectangleShape& getShape() const { return shape; }
     float getVelocity() const { return velocity; }
     
     void setVelocity(float v) { 
@@ -31,6 +33,7 @@ public:
     } 
 
 private:
+    Vec2f position;
     RectangleShape shape;
     sf::Color color;
     Hitbox hitbox;

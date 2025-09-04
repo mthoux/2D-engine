@@ -8,9 +8,7 @@
 
 class Mapper {
 public:
-    sf::VertexArray vmap(const Tile& tile);
     sf::VertexArray vmap(const TileMap& tileMap);
-    sf::VertexArray vmap(const Entity& entity);
     sf::VertexArray vmap(const Shape& shape, sf::Color color);
 
 private:

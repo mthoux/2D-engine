@@ -12,7 +12,7 @@ public:
 
     // Collision avec une forme
     bool intersects(const Shape& other) const;
-    //const Shape getShape() { return shape };
+    const Shape& getShape() const { return shape; }
 private:
     Shape shape;
 };
