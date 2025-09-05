@@ -55,27 +55,33 @@ void Game::processEvents() {
 void Game::update(float dt) {
     Vec2f oldPos = player.getPosition();
     Vec2f delta = controller.handleInput(player, dt);
-    Vec2f newPos = oldPos + delta;
+    Vec2f newPos = oldPos;
 
-    player.setPosition({newPos.x, oldPos.y}); // Test X
-    bool collideX = false;
+    // --- COLLISION X ---
+    float moveX = delta.x;
     for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
-            collideX = true;
+        if (player.getHitbox().intersectsX(newPos + Vec2f{moveX, 0}, opp.getHitbox(), opp.getPosition())) {
+            if (delta.x > 0) // déplacement vers la droite
+                moveX = std::min(moveX, opp.getHitbox().left(newPos) - player.getHitbox().right(newPos));
+            else // déplacement vers la gauche
+                moveX = std::max(moveX, opp.getHitbox().right(newPos) - player.getHitbox().left(newPos));
         }
     }
-    if (collideX) newPos.x = oldPos.x;
+    newPos.x += moveX;
 
-    player.setPosition({oldPos.x, newPos.y}); // Test Y
-    bool collideY = false;
+    // --- COLLISION Y ---
+    float moveY = delta.y;
     for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
-            collideY = true;
+        if (player.getHitbox().intersectsY(newPos + Vec2f{0, moveY}, opp.getHitbox(), opp.getPosition())) {
+            if (delta.y > 0) // déplacement vers le bas
+                moveY = std::min(moveY, opp.getHitbox().top(newPos) - player.getHitbox().bottom(newPos));
+            else // déplacement vers le haut
+                moveY = std::max(moveY, opp.getHitbox().bottom(newPos) - player.getHitbox().top(newPos));
         }
     }
-    if (collideY) newPos.y = oldPos.y;
+    newPos.y += moveY;
 
-    player.setPosition(newPos); // Position finale corrigée
+    player.setPosition(newPos);
     // tu peux ajouter ici d'autres systèmes (collisions, IA, etc.)
 }
 

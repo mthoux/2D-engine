@@ -25,3 +25,6 @@ Chaque `Shape` définit :
 │   │   └── View                <-- Gère les output de l'Engine (le rendu)
 │   └── Utils
 └── tests
+
+
+Shape -> passe dans un Transform --> donne les coordonnées dans le Monde réel 
