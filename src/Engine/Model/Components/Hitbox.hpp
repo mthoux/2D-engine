@@ -1,14 +1,19 @@
 #pragma once
 #include "../Geometry/Shape.hpp"
+#include "../Components/Transform.hpp"
 
 class Hitbox {
 public:
-    Hitbox(Shape shape)
-        : shape(shape) {}
+    Hitbox(const Transform& transform, const Shape& shape, const Vec2f& offset = {0.f, 0.f})
+        : transform(transform), shape(shape), localOffset(offset) {}
 
-    // Collision avec une forme
-    //bool intersects(const Shape& other) const;
+    bool intersects(const Hitbox& other) const;
+
     const Shape& getShape() const { return shape; }
+    const Transform& getTransform() const { return transform; }
+
 private:
-    Shape shape;
+    const Transform& transform; // Position réel
+    Shape shape;                // Forme (position local)
+    Vec2f localOffset;          // Offset de la forme dans le monde
 };

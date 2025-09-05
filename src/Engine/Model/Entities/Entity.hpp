@@ -1,39 +1,33 @@
 #pragma once
-#include "../Geometry/Vec2f.hpp"
-#include "SFML/Graphics/Color.hpp"
-#include "../Geometry/RectangleShape.hpp"
+#include "../WorldObject.hpp"
 #include "../Components/Hitbox.hpp"
+#include "SFML/Graphics/Color.hpp"
 #include <algorithm>
 
 #define MAX_VELOCITY 600.f
 #define MIN_VELOCITY 0.f
 
-class Entity {
+class Entity : public WorldObject {
 public:
-    Entity(); 
-    Entity(Vec2f position, Vec2f size, sf::Color color = sf::Color::White, float velocity = 0.f);
-    void move(const Vec2f& delta);
+    // Constructeurs
+    Entity();
+    Entity(const Vec2f position, const Shape& shape, sf::Color color = sf::Color::White, float velocity = 0.f);
 
-    void translate(const Vec2f& newPosition) {
-        position = newPosition;
-    }
+    // Déplacement
+    void move(const Vec2f& delta);
 
     // Getters
     const Hitbox& getHitbox() const { return hitbox; }
-    Vec2f getPosition() const { return position; }
-    Vec2f getSize() const { return shape.getSize(); }
     sf::Color getColor() const { return color; }
-    const RectangleShape& getShape() const { return shape; }
     float getVelocity() const { return velocity; }
-    
-    void setVelocity(float v) { 
+
+    // Setter
+    void setVelocity(float v) {
         velocity = std::clamp(v, MIN_VELOCITY, MAX_VELOCITY);
-    } 
+    }
 
 private:
-    Vec2f position;
-    RectangleShape shape;
-    sf::Color color;
     Hitbox hitbox;
+    sf::Color color;
     float velocity;
 };

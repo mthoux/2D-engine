@@ -1,11 +1,22 @@
 #include "Entity.hpp"
 
+// Constructeur par défaut
 Entity::Entity()
-    : position({0,0}), shape({0,0}, {0,0}), color(sf::Color::White), hitbox(shape), velocity(0.f)
+    : WorldObject({0.f, 0.f}, Shape()),
+      color(sf::Color::White),
+      hitbox(getTransform(), getShape(), {0.f, 0.f}),
+      velocity(0.f)
 {}
 
-Entity::Entity(Vec2f position, Vec2f size, sf::Color color, float velocity) 
-    : position(position), shape(size, {0,0}), color(color), hitbox(shape), velocity(velocity)
+// Constructeur avec paramètres
+Entity::Entity(const Vec2f position, const Shape& shape, sf::Color color, float velocity)
+    : WorldObject(position, shape),
+      color(color),
+      hitbox(getTransform(), getShape(), {0.f, 0.f}),
+      velocity(std::clamp(velocity, MIN_VELOCITY, MAX_VELOCITY))
 {}
 
-void Entity::move(const Vec2f& delta) { translate(getPosition() + delta); }
+// Déplacement relatif
+void Entity::move(const Vec2f& delta) {
+    translate(delta); // utilise le helper de WorldObject
+}

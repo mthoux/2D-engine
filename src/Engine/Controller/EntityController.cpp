@@ -30,17 +30,14 @@ void EntityController::handleInput(Entity& entity, float dt) {
         delta *= entity.getVelocity() * dt;
     }
 
-    // Calcul de la prochaine position
-    Vec2f nextPos = entity.getPosition() + delta;
-
     if (useGridMovement) {
         // Snap à la grille
         Vec2f tileSize = map->getTileSize();
-        int tileX = static_cast<int>(nextPos.x / tileSize.x);
-        int tileY = static_cast<int>(nextPos.y / tileSize.y);
-        nextPos = Vec2f(tileX * tileSize.x, tileY * tileSize.y);
+        int tileX = static_cast<int>(delta.x / tileSize.x);
+        int tileY = static_cast<int>(delta.y / tileSize.y);
+        delta = Vec2f(tileX * tileSize.x, tileY * tileSize.y);
     }
 
     // Appliquer le déplacement
-    entity.translate(nextPos);
+    entity.translate(delta);
 }

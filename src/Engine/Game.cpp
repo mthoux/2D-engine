@@ -7,8 +7,8 @@ Game::Game()
     , view(sf::Vector2f(WINDOW_WIDTH/2.f, WINDOW_HEIGHT/2.f), sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT))
     , tileMap({TILE_SIZE, TILE_SIZE}, generateMap(WINDOW_WIDTH/TILE_SIZE, WINDOW_HEIGHT/TILE_SIZE), {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
     , mapper()
-    , player({0,0}, {TILE_SIZE, TILE_SIZE}, sf::Color::Red, 230.f)
-    , opponent({TILE_SIZE*2, TILE_SIZE}, {TILE_SIZE, TILE_SIZE}, sf::Color::Yellow, 0.f)
+    , player({0,0}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Red, 230.f)
+    , opponent({TILE_SIZE*2, TILE_SIZE}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f)
     , controller(tileMap, false)
 {
     window.setFramerateLimit(60);

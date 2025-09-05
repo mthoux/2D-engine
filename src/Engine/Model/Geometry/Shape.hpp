@@ -16,8 +16,6 @@ public:
 
     void setOrigin(const Vec2f& o) { origin = o; }
 
-    std::vector<Vec2f> getWorldVertices() const;
-
 protected:
     std::vector<Vec2f> vertices; // sommets en coordonnées locales
     Vec2f origin;                // point de référence local
