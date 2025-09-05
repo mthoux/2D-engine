@@ -4,7 +4,7 @@
 #include "SFML/Graphics/Color.hpp"
 #include <algorithm>
 
-#define MAX_VELOCITY 600.f
+#define MAX_VELOCITY 1600.f
 #define MIN_VELOCITY 0.f
 
 class Entity : public WorldObject {

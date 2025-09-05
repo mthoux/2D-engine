@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "Model/Entities/TileMap.hpp"
 #include "Model/Entities/Entity.hpp"
 #include "Controller/EntityController.hpp"
@@ -23,6 +24,6 @@ private:
     TileMap tileMap;
     Mapper mapper;
     Entity player;
-    Entity opponent;
+    std::vector<Entity> opponents;
     EntityController controller;
 };

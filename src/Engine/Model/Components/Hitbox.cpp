@@ -3,13 +3,13 @@
 #include <algorithm>
 #include <vector>
 
-bool Hitbox::intersects(const Hitbox& other) const {
+bool Hitbox::intersects(const Vec2f& pos, const Hitbox& other, const Vec2f& otherPos) const {
     // Position globale avec offset
-    Vec2f worldPos1 = transform.getPosition() + localOffset;
-    Vec2f worldPos2 = other.getTransform().getPosition() + other.localOffset;
+    Vec2f worldPos1 = pos + localOffset;
+    Vec2f worldPos2 = otherPos + other.localOffset;
 
     std::vector<Vec2f> worldVertices1 = computeWorldVertices(shape, worldPos1);
-    std::vector<Vec2f> worldVertices2 = computeWorldVertices(other.getShape(), worldPos2);
+    std::vector<Vec2f> worldVertices2 = computeWorldVertices(other.shape, worldPos2);
 
     // Calcul AABB 1
     float minX1 = worldVertices1[0].x, maxX1 = worldVertices1[0].x;

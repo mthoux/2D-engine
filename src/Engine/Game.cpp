@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "../Utils/MapGenerator.hpp"
 #include "Configurations.hpp"
+#include <iostream>
 
 Game::Game()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
@@ -8,10 +9,14 @@ Game::Game()
     , tileMap({TILE_SIZE, TILE_SIZE}, generateMap(WINDOW_WIDTH/TILE_SIZE, WINDOW_HEIGHT/TILE_SIZE), {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
     , mapper()
     , player({0,0}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Red, 230.f)
-    , opponent({TILE_SIZE*2, TILE_SIZE}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f)
     , controller(tileMap, false)
 {
     window.setFramerateLimit(60);
+
+    // On remplit le vector d'ennemis
+    opponents.emplace_back(Vec2f{TILE_SIZE*2, TILE_SIZE}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f);
+    opponents.emplace_back(Vec2f{TILE_SIZE*4, TILE_SIZE*2}, RectangleShape({TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f);
+    opponents.emplace_back(Vec2f{TILE_SIZE*6, TILE_SIZE*6}, RectangleShape({TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f);
 }
 
 void Game::run() {
@@ -27,6 +32,14 @@ void Game::run() {
 
 void Game::processEvents() {
     while(const std::optional event = window.pollEvent()) {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            player.setVelocity(player.getVelocity() + 50);
+        }
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            player.setVelocity(player.getVelocity() - 50);
+        }
+
         if(event->is<sf::Event::Closed>())
             window.close();
 
@@ -40,7 +53,29 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
-    controller.handleInput(player, dt);
+    Vec2f oldPos = player.getPosition();
+    Vec2f delta = controller.handleInput(player, dt);
+    Vec2f newPos = oldPos + delta;
+
+    player.setPosition({newPos.x, oldPos.y}); // Test X
+    bool collideX = false;
+    for (const Entity& opp : opponents) {
+        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
+            collideX = true;
+        }
+    }
+    if (collideX) newPos.x = oldPos.x;
+
+    player.setPosition({oldPos.x, newPos.y}); // Test Y
+    bool collideY = false;
+    for (const Entity& opp : opponents) {
+        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
+            collideY = true;
+        }
+    }
+    if (collideY) newPos.y = oldPos.y;
+
+    player.setPosition(newPos); // Position finale corrigée
     // tu peux ajouter ici d'autres systèmes (collisions, IA, etc.)
 }
 
@@ -49,9 +84,12 @@ void Game::render() {
     window.setView(view);
 
     window.draw(mapper.vmap(tileMap));
+    for (const auto& opp : opponents) {
+        window.draw(mapper.vmap(opp.getShape(), opp.getPosition(), opp.getColor()));
+        //window.draw(mapper.vmap(opp.getHitbox().getShape(), opp.getHitbox().getTransform()->getPosition(), sf::Color::White));
+    }
     window.draw(mapper.vmap(player.getShape(), player.getPosition(), player.getColor()));
-    window.draw(mapper.vmap(opponent.getShape(), opponent.getPosition(), opponent.getColor()));
-    //window.draw(mapper.vmap(player.getHitbox().getShape(), sf::Color::Magenta));
+    //window.draw(mapper.vmap( player.getHitbox().getShape(), player.getHitbox().getTransform()->getPosition(), sf::Color::Magenta));
 
     window.display();
 }

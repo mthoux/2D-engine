@@ -1,5 +1,11 @@
 #include "../src/Engine/Model/Geometry/Vec2f.hpp"
+#include "../src/Engine/Model/Geometry/RectangleShape.hpp"
+#include "../src/Engine/Model/Components/Hitbox.hpp"
+#include "../src/Engine/Model/Entities/Entity.hpp"
 #include "catch2/catch_all.hpp"
+
+Entity e1({0,0}, RectangleShape({10,10}));
+Entity e2({10,100}, RectangleShape({10,10}));
 
 TEST_CASE("Test vecteur") {
     Vec2f v1 = {2,3};
@@ -7,4 +13,8 @@ TEST_CASE("Test vecteur") {
     Vec2f v3 = {6,8};
 
     REQUIRE(v1+v2==v3);
+}
+
+TEST_CASE("Test Hitbox transform matches Entity Transform") {
+
 }

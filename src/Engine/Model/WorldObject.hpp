@@ -10,14 +10,14 @@ private:
 
 public:
     // Constructeur
-    WorldObject(const Vec2f& pos = {0.f, 0.f}, const Shape& sh = Shape())
-        : transform(pos), shape(sh) {}
+    WorldObject(const Vec2f& pos = {0.f, 0.f}, const Shape& shape = Shape())
+        : transform(pos), shape(shape) {}
 
     // --- Getters ---
     const Vec2f& getPosition() const { return transform.getPosition(); }
     float getRotation() const { return transform.getRotation(); }
     const Vec2f& getScale() const { return transform.getScale(); }
-    const Transform& getTransform() const { return transform; }
+    const Transform* getTransform() const { return &transform; }
     const Shape& getShape() const { return shape; }
 
     // --- Setters ---

@@ -8,3 +8,20 @@ Chaque `Shape` définit :
 📌 Schéma : 
 
 ![Schéma RectangleShape](img/coordinate_system_schema.png)
+
+
+.
+├── assets
+├── docs
+│   └── img
+├── src
+│   ├── Engine                  
+│   │   ├── Controller          <-- Gère les input de l'Engine
+│   │   ├── Model               <-- Defini les données
+│   │   │   ├── Components      <-- Utilitaires pour formes
+│   │   │   ├── Entities        <-- Forme avancés
+│   │   │   └── Geometry        <-- Forme de base du modèle
+│   │   └── Physics             <-- Agit sur les données
+│   │   └── View                <-- Gère les output de l'Engine (le rendu)
+│   └── Utils
+└── tests
