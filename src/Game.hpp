@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Model/Entities/TileMap.hpp"
-#include "Model/Entities/Entity.hpp"
-#include "Controller/EntityController.hpp"
-#include "View/Mapper.hpp"
+#include "Engine/Model/Entities/TileMap.hpp"
+#include "Engine/Model/Entities/Entity.hpp"
+#include "Engine/Controller/EntityController.hpp"
+#include "Engine/View/Mapper.hpp"
 
 class Game {
 public:
@@ -26,4 +26,5 @@ private:
     Entity player;
     std::vector<Entity> opponents;
     EntityController controller;
+    int test_counter = 0;
 };

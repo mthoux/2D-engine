@@ -1,6 +1,6 @@
 #pragma once
 #include "../Geometry/Shape.hpp"
-#include "../Geometry/Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
 
 class Hitbox {
 public:

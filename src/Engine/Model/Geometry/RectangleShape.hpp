@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
 #include "Shape.hpp"
 
 class RectangleShape : public Shape {

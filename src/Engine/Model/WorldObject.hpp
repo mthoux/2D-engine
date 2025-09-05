@@ -1,6 +1,6 @@
 #pragma once
 #include "Components/Transform.hpp"
-#include "Geometry/Vec2f.hpp"
+#include "Math/Vec2f.hpp"
 #include "Geometry/Shape.hpp"
 
 class WorldObject {

@@ -2,7 +2,7 @@
 #include <vector>
 #include <optional>
 #include "Tile.hpp"
-#include "../Geometry/Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
 
 class TileMap {
 public:

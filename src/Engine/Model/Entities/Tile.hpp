@@ -1,5 +1,5 @@
 #pragma once
-#include "../Geometry/Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include "../Geometry/RectangleShape.hpp"
 #include "../WorldObject.hpp"

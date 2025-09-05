@@ -1,5 +1,6 @@
 #pragma once
-#include "../Geometry/Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
+#include "../Math/Mat3.hpp"
 
 class Transform {
 private:
@@ -24,8 +25,18 @@ public:
     // --- Helpers ---
     void translate(const Vec2f& delta) { position += delta; }
     void rotate(float deltaAngle) { rotation += deltaAngle; }
-    void rescale(const Vec2f& factor) {
+    void rescale(const Vec2f& factor) { 
         scale.x *= factor.x;
         scale.y *= factor.y;
+    }
+
+    // --- Conversion degrés -> radians ---
+    static float degToRad(float degrees) {
+        return degrees * (static_cast<float>(M_PI) / 180.f);
+    }
+
+    // Renvoie la matrice combinée scale -> rotate -> translate ---
+    Mat3 getMatrix() const {
+        return Mat3::compose(position, rotation, scale);
     }
 };

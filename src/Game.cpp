@@ -1,7 +1,13 @@
 #include "Game.hpp"
-#include "../Utils/MapGenerator.hpp"
-#include "Configurations.hpp"
+#include "Utils/MapGenerator.hpp"
+#include "Engine/Configurations.hpp"
 #include <iostream>
+
+#include <thread>
+#include <chrono>
+
+
+#include "Utils/Utils.hpp"
 
 Game::Game()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
@@ -55,37 +61,36 @@ void Game::processEvents() {
 void Game::update(float dt) {
     Vec2f oldPos = player.getPosition();
     Vec2f delta = controller.handleInput(player, dt);
-    Vec2f newPos = oldPos;
+    Vec2f newPos = oldPos + delta;
 
-    // --- COLLISION X ---
-    float moveX = delta.x;
+    player.setPosition({newPos.x, oldPos.y}); // Test X
+    bool collideX = false;
     for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersectsX(newPos + Vec2f{moveX, 0}, opp.getHitbox(), opp.getPosition())) {
-            if (delta.x > 0) // déplacement vers la droite
-                moveX = std::min(moveX, opp.getHitbox().left(newPos) - player.getHitbox().right(newPos));
-            else // déplacement vers la gauche
-                moveX = std::max(moveX, opp.getHitbox().right(newPos) - player.getHitbox().left(newPos));
+        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
+            collideX = true;
         }
     }
-    newPos.x += moveX;
+    if (collideX) newPos.x = oldPos.x;
 
-    // --- COLLISION Y ---
-    float moveY = delta.y;
+    player.setPosition({oldPos.x, newPos.y}); // Test Y
+    bool collideY = false;
     for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersectsY(newPos + Vec2f{0, moveY}, opp.getHitbox(), opp.getPosition())) {
-            if (delta.y > 0) // déplacement vers le bas
-                moveY = std::min(moveY, opp.getHitbox().top(newPos) - player.getHitbox().bottom(newPos));
-            else // déplacement vers le haut
-                moveY = std::max(moveY, opp.getHitbox().bottom(newPos) - player.getHitbox().top(newPos));
+        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
+            collideY = true;
         }
     }
-    newPos.y += moveY;
+    if (collideY) newPos.y = oldPos.y;
 
-    player.setPosition(newPos);
+    player.setPosition(newPos); // Position finale corrigée
     // tu peux ajouter ici d'autres systèmes (collisions, IA, etc.)
 }
 
 void Game::render() {
+    ++test_counter;
+    //std::this_thread::sleep_for(std::chrono::seconds(1));
+    RectangleShape r({50,50}, {25, 25});
+    
+
     window.clear();
     window.setView(view);
 
@@ -94,7 +99,8 @@ void Game::render() {
         window.draw(mapper.vmap(opp.getShape(), opp.getPosition(), opp.getColor()));
         //window.draw(mapper.vmap(opp.getHitbox().getShape(), opp.getHitbox().getTransform()->getPosition(), sf::Color::White));
     }
-    window.draw(mapper.vmap(player.getShape(), player.getPosition(), player.getColor()));
+    window.draw(mapper.vmap(applyTransform(player.getShape(), Transform({0,0}, Transform::degToRad(test_counter), {1,1})), player.getPosition(), player.getColor()));
+    window.draw(mapper.vmap(applyTransform(r,Transform({0,0},Transform::degToRad(test_counter),{2,2})), {TILE_SIZE*3, TILE_SIZE*3}, sf::Color::White));
     //window.draw(mapper.vmap( player.getHitbox().getShape(), player.getHitbox().getTransform()->getPosition(), sf::Color::Magenta));
 
     window.display();

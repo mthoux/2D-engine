@@ -2,7 +2,7 @@
 
 #include "../Model/Entities/Entity.hpp"
 #include "../Model/Entities/TileMap.hpp"
-#include "../Model/Geometry/Vec2f.hpp"
+#include "../Model/Math/Vec2f.hpp"
 #include <SFML/Window/Keyboard.hpp>
 
 class EntityController {

@@ -1,22 +1,22 @@
 #pragma once
-#include "Vec2f.hpp"
+#include "../Math/Vec2f.hpp"
 #include <vector>
 
 class Shape {
 public:
     Shape(const std::vector<Vec2f>& vertices,
-          Vec2f origin = {0.f, 0.f})
-        : vertices(vertices), origin(origin) {}
+          Vec2f offset = {0.f, 0.f})
+        : vertices(vertices), offset(offset) {}
 
-    Shape(Vec2f origin = {0.f, 0.f})
-        : origin(origin) {}
+    Shape(Vec2f offset = {0.f, 0.f})
+        : offset(offset) {}
     
-    Vec2f getOrigin() const { return origin; }
+    Vec2f getOffset() const { return offset; }
     const std::vector<Vec2f>& getVertices() const { return vertices; }
 
-    void setOrigin(const Vec2f& o) { origin = o; }
+    void setOffset(const Vec2f& o) { offset = o; }
 
 protected:
     std::vector<Vec2f> vertices; // sommets en coordonnées locales
-    Vec2f origin;                // point de référence local
+    Vec2f offset;                // offset pour le dessin
 };

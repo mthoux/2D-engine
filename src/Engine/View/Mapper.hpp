@@ -2,7 +2,7 @@
 #include "../Model/Entities/Tile.hpp"
 #include "../Model/Entities/TileMap.hpp"
 #include "../Model/Entities/Entity.hpp"
-#include "../Model/Geometry/Vec2f.hpp"
+#include "../Model/Math/Vec2f.hpp"
 #include "../Model/Geometry/Shape.hpp"
 #include <SFML/Graphics.hpp>
 
