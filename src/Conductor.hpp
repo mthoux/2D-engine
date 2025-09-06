@@ -6,10 +6,10 @@
 #include "Engine/Controller/EntityController.hpp"
 #include "Engine/View/Mapper.hpp"
 
-class Game {
+class Conductor {
 public:
-    Game();
-    ~Game() = default;
+    Conductor();
+    ~Conductor() = default;
 
     void run();
 
