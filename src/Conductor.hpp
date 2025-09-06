@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Engine/Model/Entities/TileMap.hpp"
-#include "Engine/Model/Entities/Entity.hpp"
+#include "Engine/Model/Objects/TileMap.hpp"
+#include "Engine/Model/Objects/Entity.hpp"
 #include "Engine/Controller/EntityController.hpp"
 #include "Engine/View/Mapper.hpp"
 
@@ -26,5 +26,4 @@ private:
     Entity player;
     std::vector<Entity> opponents;
     EntityController controller;
-    int test_counter = 0;
 };

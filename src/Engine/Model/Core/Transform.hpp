@@ -1,6 +1,6 @@
 #pragma once
-#include "../Math/Vec2f.hpp"
-#include "../Math/Mat3.hpp"
+#include "../Core/Math/Vec2f.hpp"
+#include "../Core/Math/Mat3.hpp"
 
 class Transform {
 private:
@@ -28,11 +28,6 @@ public:
     void rescale(const Vec2f& factor) { 
         scale.x *= factor.x;
         scale.y *= factor.y;
-    }
-
-    // --- Conversion degrés -> radians ---
-    static float degToRad(float degrees) {
-        return degrees * (static_cast<float>(M_PI) / 180.f);
     }
 
     // Renvoie la matrice combinée scale -> rotate -> translate ---

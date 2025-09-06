@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Model/Entities/Entity.hpp"
-#include "../Model/Entities/TileMap.hpp"
-#include "../Model/Math/Vec2f.hpp"
+#include "../Model/Objects/Entity.hpp"
+#include "../Model/Objects/TileMap.hpp"
+#include "../Model/Core/Math/Vec2f.hpp"
 #include <SFML/Window/Keyboard.hpp>
 
 class EntityController {

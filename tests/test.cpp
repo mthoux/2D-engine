@@ -1,10 +1,10 @@
-#include "../src/Engine/Model/Math/Vec2f.hpp"
-#include "../src/Engine/Model/Geometry/RectangleShape.hpp"
-#include "../src/Engine/Model/Components/Hitbox.hpp"
-#include "../src/Engine/Model/Entities/Entity.hpp"
+#include "../src/Engine/Model/Core/Math/Vec2f.hpp"
+#include "../src/Engine/Model/Core/Geometry/RectangleShape.hpp"
+#include "../src/Engine/Model/Core/Hitbox.hpp"
+#include "../src/Engine/Model/Objects/Entity.hpp"
 #include "catch2/catch_all.hpp"
-#include "../src/Engine/Model/Geometry/RectangleShape.hpp"
-#include "../src/Engine/Model/Components/Transform.hpp"
+#include "../src/Engine/Model/Core/Geometry/RectangleShape.hpp"
+#include "../src/Engine/Model/Core/Transform.hpp"
 #include <iostream>
 
 Entity e1({0,0}, RectangleShape({10,10}));

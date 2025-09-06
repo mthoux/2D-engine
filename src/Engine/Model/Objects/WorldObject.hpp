@@ -1,7 +1,7 @@
 #pragma once
-#include "Components/Transform.hpp"
-#include "Math/Vec2f.hpp"
-#include "Geometry/Shape.hpp"
+#include "../Core/Transform.hpp"
+#include "../Core/Math/Vec2f.hpp"
+#include "../Core/Geometry/Shape.hpp"
 
 class WorldObject {
 private:

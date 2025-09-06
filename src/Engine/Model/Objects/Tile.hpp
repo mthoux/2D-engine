@@ -1,8 +1,8 @@
 #pragma once
-#include "../Math/Vec2f.hpp"
+#include "../Core/Math/Vec2f.hpp"
 #include <SFML/Graphics/Color.hpp>
-#include "../Geometry/RectangleShape.hpp"
-#include "../WorldObject.hpp"
+#include "../Core/Geometry/RectangleShape.hpp"
+#include "WorldObject.hpp"
 
 class Tile : public WorldObject
 {

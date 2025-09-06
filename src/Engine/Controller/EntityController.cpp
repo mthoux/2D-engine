@@ -1,7 +1,7 @@
 #include "EntityController.hpp"
 #include <cmath>
-#include "../Configurations.hpp"
-#include "../Model/Math/Vec2f.hpp"
+#include "ControllerConfigurations.hpp"
+#include "../Model/Core/Math/Vec2f.hpp"
 
 EntityController::EntityController(TileMap& map, bool gridMode)
     : map(&map), useGridMovement(gridMode) {}

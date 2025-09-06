@@ -1,5 +1,5 @@
 #include "Mapper.hpp"
-#include "../../Utils/Utils.hpp"
+#include "../Utils/Utils.hpp"
 
 // --- TileMap ---
 sf::VertexArray Mapper::vmap(const TileMap& tileMap) {

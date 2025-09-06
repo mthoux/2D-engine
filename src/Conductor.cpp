@@ -1,13 +1,10 @@
-#include "Game.hpp"
-#include "Utils/MapGenerator.hpp"
-#include "Engine/Configurations.hpp"
+#include "Conductor.hpp"
+#include "Engine/Model/Utils/MapGenerator.hpp"
 #include <iostream>
 
-#include <thread>
-#include <chrono>
-
-
-#include "Utils/Utils.hpp"
+#define WINDOW_WIDTH    512
+#define WINDOW_HEIGHT   512
+#define TILE_SIZE       64
 
 Game::Game()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
@@ -86,22 +83,15 @@ void Game::update(float dt) {
 }
 
 void Game::render() {
-    ++test_counter;
-    //std::this_thread::sleep_for(std::chrono::seconds(1));
-    RectangleShape r({50,50}, {25, 25});
     
-
     window.clear();
     window.setView(view);
 
     window.draw(mapper.vmap(tileMap));
     for (const auto& opp : opponents) {
         window.draw(mapper.vmap(opp.getShape(), opp.getPosition(), opp.getColor()));
-        //window.draw(mapper.vmap(opp.getHitbox().getShape(), opp.getHitbox().getTransform()->getPosition(), sf::Color::White));
     }
-    window.draw(mapper.vmap(applyTransform(player.getShape(), Transform({0,0}, Transform::degToRad(test_counter), {1,1})), player.getPosition(), player.getColor()));
-    window.draw(mapper.vmap(applyTransform(r,Transform({0,0},Transform::degToRad(test_counter),{2,2})), {TILE_SIZE*3, TILE_SIZE*3}, sf::Color::White));
-    //window.draw(mapper.vmap( player.getHitbox().getShape(), player.getHitbox().getTransform()->getPosition(), sf::Color::Magenta));
+    window.draw(mapper.vmap(player.getShape(), player.getPosition(), player.getColor()));
 
     window.display();
 }

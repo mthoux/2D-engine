@@ -1,9 +1,9 @@
 #pragma once
-#include "../Model/Entities/Tile.hpp"
-#include "../Model/Entities/TileMap.hpp"
-#include "../Model/Entities/Entity.hpp"
-#include "../Model/Math/Vec2f.hpp"
-#include "../Model/Geometry/Shape.hpp"
+#include "../Model/Objects/Tile.hpp"
+#include "../Model/Objects/TileMap.hpp"
+#include "../Model/Objects/Entity.hpp"
+#include "../Model/Core/Math/Vec2f.hpp"
+#include "../Model/Core/Geometry/Shape.hpp"
 #include <SFML/Graphics.hpp>
 
 class Mapper {

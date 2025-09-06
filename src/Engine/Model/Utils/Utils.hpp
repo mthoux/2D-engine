@@ -1,17 +1,17 @@
 #pragma once
 #include <vector>
-#include "../Engine/Model/Geometry/Shape.hpp"
-#include "../Engine/Model/Math/Vec2f.hpp"
-#include "../Engine/Model/Geometry/Shape.hpp"
-#include "../Engine/Model/Components/Transform.hpp"
-#include "../Engine/Model/Math/Mat3.hpp"
+#include "../Core/Geometry/Shape.hpp"
+#include "../Core/Math/Vec2f.hpp"
+#include "../Core/Geometry/Shape.hpp"
+#include "../Core/Transform.hpp"
+#include "../Core/Math/Mat3.hpp"
 
 inline std::vector<Vec2f> computeWorldVertices(const Shape& shape, const Vec2f& position) {
     std::vector<Vec2f> shapeVertices = shape.getVertices();
     std::vector<Vec2f> worldVerts;
     worldVerts.reserve(shapeVertices.size());
     for (const auto& v : shapeVertices)
-        worldVerts.push_back(v - shape.getOffset() + position);
+        worldVerts.push_back(v - shape.getReference() + position);
     return worldVerts;
 }
 
@@ -22,11 +22,11 @@ inline Shape applyTransform(const Shape& shape, const Transform& transform) {
 
     for (const auto& v : shape.getVertices()) {
         // soustraire l'offset pour que la rotation/scale se fasse autour du pivot
-        transformedVertices.push_back(mat.apply(v - shape.getOffset()));
+        transformedVertices.push_back(mat.apply(v - shape.getReference()));
     }
 
     // Crée une nouvelle Shape avec les vertices transformées et le même offset
-    Shape newShape(transformedVertices, shape.getOffset());
+    Shape newShape(transformedVertices, shape.getReference());
     return newShape;
 }
 

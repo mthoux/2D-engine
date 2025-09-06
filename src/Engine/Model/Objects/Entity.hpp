@@ -1,6 +1,6 @@
 #pragma once
-#include "../WorldObject.hpp"
-#include "../Components/Hitbox.hpp"
+#include "WorldObject.hpp"
+#include "../Core/Hitbox.hpp"
 #include "SFML/Graphics/Color.hpp"
 #include <algorithm>
 
