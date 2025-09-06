@@ -6,7 +6,7 @@
 #define WINDOW_HEIGHT   512
 #define TILE_SIZE       64
 
-Game::Game()
+Conductor::Conductor()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
     , view(sf::Vector2f(WINDOW_WIDTH/2.f, WINDOW_HEIGHT/2.f), sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT))
     , tileMap({TILE_SIZE, TILE_SIZE}, generateMap(WINDOW_WIDTH/TILE_SIZE, WINDOW_HEIGHT/TILE_SIZE), {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
@@ -22,7 +22,7 @@ Game::Game()
     opponents.emplace_back(Vec2f{TILE_SIZE*6, TILE_SIZE*6}, RectangleShape({TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f);
 }
 
-void Game::run() {
+void Conductor::run() {
     sf::Clock clock;
     while(window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -33,7 +33,7 @@ void Game::run() {
     }
 }
 
-void Game::processEvents() {
+void Conductor::processEvents() {
     while(const std::optional event = window.pollEvent()) {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             player.setVelocity(player.getVelocity() + 50);
@@ -55,7 +55,7 @@ void Game::processEvents() {
     }
 }
 
-void Game::update(float dt) {
+void Conductor::update(float dt) {
     Vec2f oldPos = player.getPosition();
     Vec2f delta = controller.handleInput(player, dt);
     Vec2f newPos = oldPos + delta;
@@ -82,7 +82,7 @@ void Game::update(float dt) {
     // tu peux ajouter ici d'autres systèmes (collisions, IA, etc.)
 }
 
-void Game::render() {
+void Conductor::render() {
     
     window.clear();
     window.setView(view);

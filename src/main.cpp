@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game game;
+    Conductor game;
     game.run();
     return 0;
 }
