@@ -5,7 +5,7 @@
 
 class RectangleShape : public Shape {
 public:
-    RectangleShape(const Vec2f& size, Vec2f origin = {0.f, 0.f});
+    RectangleShape(Vec2f origin = {0.f, 0.f});
 
     Vec2f getSize() const;
     void setSize(const Vec2f& newSize);

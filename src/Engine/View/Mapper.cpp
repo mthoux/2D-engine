@@ -7,7 +7,7 @@ sf::VertexArray Mapper::vmap(const TileMap& tileMap) {
 
     for (const std::vector<Tile>& row : tileMap.tiles) {
         for (const Tile& tile : row) {
-            sf::VertexArray tileVertices = vmap(tile.getShape(), tile.getPosition(), tile.getColor());
+            sf::VertexArray tileVertices = vmap(tile.getShape(), tile.getTransform(), tile.getColor());
             for (int j = 0; j < 6; ++j) {
                 vertices.append(tileVertices[j]);
             }
@@ -18,8 +18,8 @@ sf::VertexArray Mapper::vmap(const TileMap& tileMap) {
 }
 
 // For Shapes
-sf::VertexArray Mapper::vmap(const Shape& shape, Vec2f position, sf::Color color) {
-    std::vector<Vec2f> worldVerts = computeWorldVertices(shape, position);
+sf::VertexArray Mapper::vmap(const Shape& shape, const Transform& transform, sf::Color color) {
+    std::vector<Vec2f> worldVerts = applyTransform(shape,transform).getVertices();
 
     // SFML veut des triangles, donc on fait une conversion simple pour rectangles
     sf::VertexArray vertices;

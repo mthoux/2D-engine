@@ -11,7 +11,7 @@ class Entity : public WorldObject {
 public:
     // Constructeurs
     Entity();
-    Entity(const Vec2f position, const Shape& shape, sf::Color color = sf::Color::White, float velocity = 0.f);
+    Entity(const Shape& shape,  const Transform& transform, sf::Color color = sf::Color::White, float velocity = 0.f);
 
     // Déplacement
     void move(const Vec2f& delta);

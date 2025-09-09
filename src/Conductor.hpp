@@ -26,4 +26,6 @@ private:
     Entity player;
     std::vector<Entity> opponents;
     EntityController controller;
+
+    void moveRandom(Entity& e, float maxStep);
 };

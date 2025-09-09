@@ -1,6 +1,7 @@
 #pragma once
 #include "Geometry/Shape.hpp"
 #include "Math/Vec2f.hpp"
+#include "Transform.hpp"
 
 class Hitbox {
 public:
@@ -9,7 +10,9 @@ public:
 
     // Teste la collision avec une autre hitbox
     // On passe les positions actuelles des deux objets
-    bool intersects(const Vec2f& pos, const Hitbox& other, const Vec2f& otherPos) const;
+    bool intersects(const Transform& transform,
+                        const Hitbox& other,
+                        const Transform& otherTransform) const;
 
     const Shape& getShape() const { return shape; }
     const Vec2f& getOffset() const { return localOffset; }

@@ -4,12 +4,13 @@
 #include "../Model/Objects/Entity.hpp"
 #include "../Model/Core/Math/Vec2f.hpp"
 #include "../Model/Core/Geometry/Shape.hpp"
+#include "../Model/Core/Transform.hpp"
 #include <SFML/Graphics.hpp>
 
 class Mapper {
 public:
     sf::VertexArray vmap(const TileMap& tileMap);
-    sf::VertexArray vmap(const Shape& shape, Vec2f position, sf::Color color);
+    sf::VertexArray vmap(const Shape& shape, const Transform& transform, sf::Color color);
 
 private:
     inline sf::Vector2f toSFML(const Vec2f& v) const {

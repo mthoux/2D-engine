@@ -1,8 +1,8 @@
 #include "RectangleShape.hpp"
 
 // Constructeur
-RectangleShape::RectangleShape(const Vec2f& size, Vec2f origin)
-    : Shape(origin), size(size)
+RectangleShape::RectangleShape(Vec2f origin)
+    : Shape(origin)
 {
     buildVertices();
 }
@@ -23,7 +23,7 @@ void RectangleShape::buildVertices() {
     vertices.clear();
 
     vertices.push_back({0.f, 0.f});               // top-left
-    vertices.push_back({size.x, 0.f});            // top-right
-    vertices.push_back({size.x, size.y});         // bottom-right
-    vertices.push_back({0.f, size.y});            // bottom-left
+    vertices.push_back({1.f, 0.f});            // top-right
+    vertices.push_back({1.f, 1.f});         // bottom-right
+    vertices.push_back({0.f, 1.f});            // bottom-left
 }

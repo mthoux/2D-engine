@@ -3,15 +3,14 @@
 #include <algorithm>
 #include <vector>
 
-bool Hitbox::intersects(const Vec2f& pos, const Hitbox& other, const Vec2f& otherPos) const {
-    // Position globale avec offset
-    Vec2f worldPos1 = pos + localOffset;
-    Vec2f worldPos2 = otherPos + other.localOffset;
+bool Hitbox::intersects(const Transform& transform,
+                        const Hitbox& other,
+                        const Transform& otherTransform) const {
+    // Applique transform + offset aux sommets locaux
+    std::vector<Vec2f> worldVertices1 = applyTransform(shape, transform).getVertices();
+    std::vector<Vec2f> worldVertices2 = applyTransform(other.shape, otherTransform).getVertices();
 
-    std::vector<Vec2f> worldVertices1 = computeWorldVertices(shape, worldPos1);
-    std::vector<Vec2f> worldVertices2 = computeWorldVertices(other.shape, worldPos2);
-
-    // Calcul AABB 1
+    // Calcul AABB pour worldVertices1
     float minX1 = worldVertices1[0].x, maxX1 = worldVertices1[0].x;
     float minY1 = worldVertices1[0].y, maxY1 = worldVertices1[0].y;
     for (const auto& v : worldVertices1) {
@@ -21,7 +20,7 @@ bool Hitbox::intersects(const Vec2f& pos, const Hitbox& other, const Vec2f& othe
         maxY1 = std::max(maxY1, v.y);
     }
 
-    // Calcul AABB 2
+    // Calcul AABB pour worldVertices2
     float minX2 = worldVertices2[0].x, maxX2 = worldVertices2[0].x;
     float minY2 = worldVertices2[0].y, maxY2 = worldVertices2[0].y;
     for (const auto& v : worldVertices2) {

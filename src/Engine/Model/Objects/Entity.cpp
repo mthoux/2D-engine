@@ -2,17 +2,17 @@
 
 // Constructeur par défaut
 Entity::Entity()
-    : WorldObject({0.f, 0.f}, Shape()),
+    : WorldObject(Shape(), Transform()),
       color(sf::Color::White),
-      hitbox(getShape(), {0.f, 0.f}),
+      hitbox(getShape()),
       velocity(0.f)
 {}
 
 // Constructeur avec paramètres
-Entity::Entity(const Vec2f position, const Shape& shape, sf::Color color, float velocity)
-    : WorldObject(position, shape),
+Entity::Entity(const Shape& shape,  const Transform& transform, sf::Color color, float velocity)
+    : WorldObject(shape, transform),
       color(color),
-      hitbox(getShape(), {0.f, 0.f}),
+      hitbox(getShape()),
       velocity(std::clamp(velocity, MIN_VELOCITY, MAX_VELOCITY))
 {}
 

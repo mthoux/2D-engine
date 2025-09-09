@@ -1,6 +1,8 @@
 #include "Conductor.hpp"
 #include "Engine/Model/Utils/MapGenerator.hpp"
+#include "Engine/Model/Physics/CollisionSystem.hpp"
 #include <iostream>
+#include <cstdlib>  // rand, srand
 
 #define WINDOW_WIDTH    512
 #define WINDOW_HEIGHT   512
@@ -11,15 +13,15 @@ Conductor::Conductor()
     , view(sf::Vector2f(WINDOW_WIDTH/2.f, WINDOW_HEIGHT/2.f), sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT))
     , tileMap({TILE_SIZE, TILE_SIZE}, generateMap(WINDOW_WIDTH/TILE_SIZE, WINDOW_HEIGHT/TILE_SIZE), {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
     , mapper()
-    , player({0,0}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Red, 230.f)
+    , player(RectangleShape(), Transform({0,0},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Red, 230.f)
     , controller(tileMap, false)
 {
     window.setFramerateLimit(60);
 
     // On remplit le vector d'ennemis
-    opponents.emplace_back(Vec2f{TILE_SIZE*2, TILE_SIZE}, RectangleShape({TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f);
-    opponents.emplace_back(Vec2f{TILE_SIZE*4, TILE_SIZE*2}, RectangleShape({TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f);
-    opponents.emplace_back(Vec2f{TILE_SIZE*6, TILE_SIZE*6}, RectangleShape({TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f);
+    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*2, TILE_SIZE*3},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f));
+    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*4, TILE_SIZE*2},10,{TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f));
+    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*6, TILE_SIZE*6},0,{TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f));
 }
 
 void Conductor::run() {
@@ -58,28 +60,53 @@ void Conductor::processEvents() {
 void Conductor::update(float dt) {
     Vec2f oldPos = player.getPosition();
     Vec2f delta = controller.handleInput(player, dt);
-    Vec2f newPos = oldPos + delta;
 
-    player.setPosition({newPos.x, oldPos.y}); // Test X
-    bool collideX = false;
-    for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
-            collideX = true;
+    Vec2f newPos = Physics::CollisionSystem::resolveCollisions(
+        oldPos,
+        oldPos + delta,
+        player.getHitbox(),
+        player.getTransform(),
+        opponents,
+        0.1f // step pour le glissement
+    );
+
+    player.setPosition(newPos);
+
+    moveRandom(opponents[0], 3.f);
+}
+
+// Pour tester
+void Conductor::moveRandom(Entity& e, float maxStep) {
+    Vec2f oldPos = e.getPosition();
+    // Génère un déplacement aléatoire entre -maxStep et +maxStep
+    float dx = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
+    float dy = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
+    Vec2f delta = {dx, dy}; 
+
+    std::vector<Entity> others;
+
+    // Ajouter le player s'il n'est pas e
+    if (&player != &e) {
+        others.emplace_back(player);
+    }
+
+    // Ajouter tous les opponents sauf e
+    for (auto& opp : opponents) {
+        if (&opp != &e) {
+            others.emplace_back(opp);
         }
     }
-    if (collideX) newPos.x = oldPos.x;
 
-    player.setPosition({oldPos.x, newPos.y}); // Test Y
-    bool collideY = false;
-    for (const Entity& opp : opponents) {
-        if (player.getHitbox().intersects(player.getPosition(), opp.getHitbox(), opp.getPosition())) {
-            collideY = true;
-        }
-    }
-    if (collideY) newPos.y = oldPos.y;
+    Vec2f newPos = Physics::CollisionSystem::resolveCollisions(
+        oldPos,
+        oldPos + delta,
+        e.getHitbox(),
+        e.getTransform(),
+        others,
+        0.1f // step pour le glissement
+    );
 
-    player.setPosition(newPos); // Position finale corrigée
-    // tu peux ajouter ici d'autres systèmes (collisions, IA, etc.)
+    e.setPosition(newPos);
 }
 
 void Conductor::render() {
@@ -89,9 +116,9 @@ void Conductor::render() {
 
     window.draw(mapper.vmap(tileMap));
     for (const auto& opp : opponents) {
-        window.draw(mapper.vmap(opp.getShape(), opp.getPosition(), opp.getColor()));
+        window.draw(mapper.vmap(opp.getShape(), opp.getTransform(), opp.getColor()));
     }
-    window.draw(mapper.vmap(player.getShape(), player.getPosition(), player.getColor()));
+    window.draw(mapper.vmap(player.getShape(), player.getTransform(), player.getColor()));
 
     window.display();
 }

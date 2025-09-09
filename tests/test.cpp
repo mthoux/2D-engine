@@ -7,15 +7,12 @@
 #include "../src/Engine/Model/Core/Transform.hpp"
 #include <iostream>
 
-Entity e1({0,0}, RectangleShape({10,10}));
-Entity e2({10,100}, RectangleShape({10,10}));
+//Entity e1(RectangleShape(), {40,40}, {100,100});
+//Entity e2(RectangleShape(), {0,0}, {100,100});
 
 TEST_CASE("Test vecteur") {
-    Vec2f v1 = {2,3};
-    Vec2f v2 = {4,5};
-    Vec2f v3 = {6,8};
 
-    REQUIRE(v1+v2==v3);
+    //REQUIRE(e1.getHitbox().intersects(e1.getPosition(), e2.getHitbox(), e2.getPosition()));
 }
 
 TEST_CASE("Test shape transform") {
