@@ -1,6 +1,8 @@
 #include "Conductor.hpp"
 #include "Engine/Model/Utils/MapGenerator.hpp"
 #include "Engine/Model/Physics/CollisionSystem.hpp"
+#include "Engine/Model/Physics/CollisionSystem2.hpp"
+#include "Engine/Model/Utils/Utils.hpp"
 #include <iostream>
 #include <cstdlib>  // rand, srand
 
@@ -20,7 +22,7 @@ Conductor::Conductor()
 
     // On remplit le vector d'ennemis
     opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*2, TILE_SIZE*3},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f));
-    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*4, TILE_SIZE*2},10,{TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f));
+    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*4, TILE_SIZE*2},92,{TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f));
     opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*6, TILE_SIZE*6},0,{TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f));
 }
 
@@ -61,18 +63,22 @@ void Conductor::update(float dt) {
     Vec2f oldPos = player.getPosition();
     Vec2f delta = controller.handleInput(player, dt);
 
-    Vec2f newPos = Physics::CollisionSystem::resolveCollisions(
-        oldPos,
-        oldPos + delta,
-        player.getHitbox(),
-        player.getTransform(),
-        opponents,
-        0.1f // step pour le glissement
-    );
+    // Déplacement brut
+    player.setPosition(oldPos + delta);
 
-    player.setPosition(newPos);
+    // Transforme les shapes
+    Shape playerShape = applyTransform(player.getShape(), player.getTransform());
+    Shape oppShape = applyTransform(opponents[1].getShape(), opponents[1].getTransform());
 
-    moveRandom(opponents[0], 3.f);
+    // Calcul du MTV
+    std::optional<Vec2f> mtv = CollisionSystem2::getMTV(playerShape, oppShape);
+
+    if (mtv) {
+        // Déplacer le joueur hors de la collision
+        player.setPosition(player.getPosition() - *mtv);
+    }
+
+    moveRandom(opponents[1], 100.f);
 }
 
 // Pour tester
@@ -82,6 +88,7 @@ void Conductor::moveRandom(Entity& e, float maxStep) {
     float dx = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
     float dy = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
     Vec2f delta = {dx, dy}; 
+    e.setPosition(e.getPosition() + delta);
 
     std::vector<Entity> others;
 
@@ -97,16 +104,10 @@ void Conductor::moveRandom(Entity& e, float maxStep) {
         }
     }
 
-    Vec2f newPos = Physics::CollisionSystem::resolveCollisions(
-        oldPos,
-        oldPos + delta,
-        e.getHitbox(),
-        e.getTransform(),
-        others,
-        0.1f // step pour le glissement
-    );
-
-    e.setPosition(newPos);
+    for(Entity o : others) {
+        if (CollisionSystem2::isOverlaping(applyTransform(e.getShape(), e.getTransform()), applyTransform(o.getShape(), e.getTransform())))
+        e.setPosition(oldPos);
+    }
 }
 
 void Conductor::render() {

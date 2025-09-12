@@ -25,3 +25,5 @@
 - [ ] Multijoueur
 - [ ] Scripting
 
+
+-[] Faut revoir les collisions parce qye y a moyen d opti le nombre d axe a tester si y en a deux a deux qui ont la meme direction.
