@@ -43,6 +43,11 @@ TileMap::TileMap(Vec2f tileSize, const std::vector<std::vector<int>>& level, Vec
                 type  = Tile::WATER;
                 walkable = false;
                 break;
+            case 3:
+                color = sf::Color::Yellow;
+                type  = Tile::SAND;
+                walkable = true;
+                break;
             default:
                 std::cerr << "Unknown tile type: " << tileType << "\n";
                 break;

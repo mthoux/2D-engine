@@ -3,7 +3,6 @@
 ## Court terme (à tester demain)
 - [ ] Refactor Conductor
 - [ ] Essayer de faire un Playground
-- [ ] Refactor les collisions dans Physics (actuellement dans le Conductor :( )
 - [ ] Faut voir le truc du pivot/offset de Shape...
 
 ## Moyen terme

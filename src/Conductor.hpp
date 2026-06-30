@@ -16,7 +16,7 @@ public:
 private:
     void processEvents();
     void update(float dt);
-    void render();
+    void render(float dt);
 
     sf::RenderWindow window;
     sf::View view;

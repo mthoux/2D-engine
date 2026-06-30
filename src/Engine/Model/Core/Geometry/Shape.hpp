@@ -2,6 +2,13 @@
 #include "../Math/Vec2f.hpp"
 #include <vector>
 
+enum class Direction {
+    Left,
+    Right,
+    Top,
+    Bottom
+};
+
 class Shape {
 public:
     Shape(const std::vector<Vec2f>& vertices,
@@ -52,6 +59,29 @@ public:
 
         center /= static_cast<float>(vertices.size());
         return center;
+    }
+
+    Vec2f getExtreme(Direction dir) const {
+        if (vertices.empty()) return {0.f, 0.f};
+
+        Vec2f extreme = vertices[0];
+        for (const auto& v : vertices) {
+            switch (dir) {
+                case Direction::Left:
+                    if (v.x < extreme.x) extreme = v;
+                    break;
+                case Direction::Right:
+                    if (v.x > extreme.x) extreme = v;
+                    break;
+                case Direction::Top:
+                    if (v.y < extreme.y) extreme = v;   // pour repère écran (y vers le bas)
+                    break;
+                case Direction::Bottom:
+                    if (v.y > extreme.y) extreme = v;
+                    break;
+            }
+        }
+        return extreme;
     }
 
 protected:

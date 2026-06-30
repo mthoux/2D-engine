@@ -26,7 +26,7 @@ inline Shape applyTransform(const Shape& shape, const Transform& transform) {
     }
 
     // Crée une nouvelle Shape avec les vertices transformées et le même offset
-    Shape newShape(transformedVertices, shape.getReference());
+    Shape newShape(transformedVertices, mat.apply(shape.getReference()));
     return newShape;
 }
 

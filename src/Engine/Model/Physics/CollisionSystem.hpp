@@ -1,19 +1,16 @@
 #pragma once
+
+#include <optional>
 #include <vector>
-#include "../Objects/Entity.hpp"
 #include "../Core/Math/Vec2f.hpp"
+#include "../Core/Geometry/Shape.hpp"
+#include "../Core/Transform.hpp"
+#include "../Objects/Entity.hpp"
 
-namespace Physics {
-
-class CollisionSystem {
+class CollisionSystem2 {
 public:
-    // Vérifie si une position donnée collide avec un ensemble d'entités
-    static bool checkCollision(const Hitbox& playerHitbox, const Transform& playerTransform, const std::vector<Entity>& opponents);
 
-    // Résout les collisions sur X et Y avec glissement
-    static Vec2f resolveCollisions(const Vec2f& oldPos, const Vec2f& desiredPos,
-                                         const Hitbox& playerHitbox, Transform& playerTransform,
-                                         const std::vector<Entity>& opponents, float step);
+    static bool isOverlaping(const Shape& shape1, const Shape& shape2);
+    static std::optional<Vec2f> getMTV(const Shape& shape1, const Shape& shape2);
+
 };
-
-} // namespace Physics

@@ -1,8 +1,8 @@
 #include "Conductor.hpp"
 #include "Engine/Model/Utils/MapGenerator.hpp"
 #include "Engine/Model/Physics/CollisionSystem.hpp"
-#include "Engine/Model/Physics/CollisionSystem2.hpp"
 #include "Engine/Model/Utils/Utils.hpp"
+#include "Engine/Model/Utils/Levels.hpp"
 #include <iostream>
 #include <cstdlib>  // rand, srand
 
@@ -13,7 +13,7 @@
 Conductor::Conductor()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
     , view(sf::Vector2f(WINDOW_WIDTH/2.f, WINDOW_HEIGHT/2.f), sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT))
-    , tileMap({TILE_SIZE, TILE_SIZE}, generateMap(WINDOW_WIDTH/TILE_SIZE, WINDOW_HEIGHT/TILE_SIZE), {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
+    , tileMap({TILE_SIZE, TILE_SIZE}, LEVEL1, {float(WINDOW_HEIGHT / TILE_SIZE), float(WINDOW_WIDTH / TILE_SIZE)})
     , mapper()
     , player(RectangleShape(), Transform({0,0},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Red, 230.f)
     , controller(tileMap, false)
@@ -33,7 +33,7 @@ void Conductor::run() {
 
         processEvents();
         update(dt);
-        render();
+        render(dt);
     }
 }
 
@@ -59,58 +59,55 @@ void Conductor::processEvents() {
     }
 }
 
-void Conductor::update(float dt) {
-    Vec2f oldPos = player.getPosition();
-    Vec2f delta = controller.handleInput(player, dt);
-
-    // Déplacement brut
-    player.setPosition(oldPos + delta);
-
-    // Transforme les shapes
-    Shape playerShape = applyTransform(player.getShape(), player.getTransform());
-    Shape oppShape = applyTransform(opponents[1].getShape(), opponents[1].getTransform());
-
-    // Calcul du MTV
-    std::optional<Vec2f> mtv = CollisionSystem2::getMTV(playerShape, oppShape);
-
-    if (mtv) {
-        // Déplacer le joueur hors de la collision
-        player.setPosition(player.getPosition() - *mtv);
-    }
-
-    moveRandom(opponents[1], 100.f);
+RectangleShape getCollisionBox(Entity& entity, float dt) {
+    Shape realShape = applyTransform(entity.getShape(), entity.getTransform());
+    float vdt = float(entity.getVelocity()*dt);
+    Vec2f leftPoint = realShape.getExtreme(Direction::Left) - Vec2f{vdt, 0}*2;
+    Vec2f topPoint = realShape.getExtreme(Direction::Top) - Vec2f{0, vdt}*2;
+    Vec2f rightPoint = realShape.getExtreme(Direction::Right) + Vec2f{vdt, 0}*2;
+    Vec2f bottomPoint = realShape.getExtreme(Direction::Bottom) + Vec2f{0, vdt}*2;
+    return RectangleShape({leftPoint.x, bottomPoint.y}, {rightPoint.x, topPoint.y});
 }
 
-// Pour tester
-void Conductor::moveRandom(Entity& e, float maxStep) {
-    Vec2f oldPos = e.getPosition();
-    // Génère un déplacement aléatoire entre -maxStep et +maxStep
-    float dx = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
-    float dy = (static_cast<float>(rand()) / RAND_MAX) * 2.f * maxStep - maxStep;
-    Vec2f delta = {dx, dy}; 
-    e.setPosition(e.getPosition() + delta);
+void Conductor::update(float dt) {
 
-    std::vector<Entity> others;
+    Vec2f oldPos = player.getPosition();
+    Vec2f delta = controller.handleInput(player, dt);
+    Vec2f newPos = oldPos + delta;
 
-    // Ajouter le player s'il n'est pas e
-    if (&player != &e) {
-        others.emplace_back(player);
+    player.setPosition(newPos);
+    Shape playerShape = applyTransform(player.getShape(), player.getTransform());
+
+    RectangleShape collisionBox = getCollisionBox(player, dt);
+    std::vector<Shape> collisionToTest;
+    for(Entity& opp : opponents) {
+        Shape s = applyTransform(opp.getShape(), opp.getTransform());
+        if (collisionBox.contains(s.getReference())) {
+            collisionToTest.push_back(s);
+            std::cout << "TRUE" << std::endl;
+        } else std::cout << "CACA" << std::endl;
     }
 
-    // Ajouter tous les opponents sauf e
-    for (auto& opp : opponents) {
-        if (&opp != &e) {
-            others.emplace_back(opp);
+    for(Shape s : collisionToTest) {
+        std::optional<Vec2f> mtv = CollisionSystem2::getMTV(playerShape, s);
+
+        if (mtv) {
+            // Déplacer le joueur hors de la collision
+            player.setPosition(player.getPosition() - *mtv);
         }
     }
 
-    for(Entity o : others) {
-        if (CollisionSystem2::isOverlaping(applyTransform(e.getShape(), e.getTransform()), applyTransform(o.getShape(), e.getTransform())))
-        e.setPosition(oldPos);
-    }
+
+    // Récupère la tuile correspondante
+    // std::optional<Tile*> tile = tileMap.getTileAt(newPos);
+
+    // if (tile && *tile && !(*tile)->isWalkable()) {
+    //     newPos = oldPos; // bloqué
+    // }
 }
 
-void Conductor::render() {
+
+void Conductor::render(float dt) {
     
     window.clear();
     window.setView(view);
@@ -119,6 +116,9 @@ void Conductor::render() {
     for (const auto& opp : opponents) {
         window.draw(mapper.vmap(opp.getShape(), opp.getTransform(), opp.getColor()));
     }
+    Shape s = getCollisionBox(player, dt);
+    window.draw(mapper.vmap(s));
+
     window.draw(mapper.vmap(player.getShape(), player.getTransform(), player.getColor()));
 
     window.display();

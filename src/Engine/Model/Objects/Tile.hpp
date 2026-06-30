@@ -10,7 +10,8 @@ public:
     enum Type { 
         NONE,
         GRASS, 
-        WATER
+        WATER,
+        SAND
     };
 
     // Constructeurs

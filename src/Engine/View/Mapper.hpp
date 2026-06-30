@@ -10,7 +10,7 @@
 class Mapper {
 public:
     sf::VertexArray vmap(const TileMap& tileMap);
-    sf::VertexArray vmap(const Shape& shape, const Transform& transform, sf::Color color);
+    sf::VertexArray vmap(const Shape& shape, const Transform& transform = Transform(), sf::Color color = sf::Color::White);
 
 private:
     inline sf::Vector2f toSFML(const Vec2f& v) const {
