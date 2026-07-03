@@ -18,6 +18,8 @@ private:
     void update(float dt);
     void render(float dt);
 
+    void clampView();
+
     sf::RenderWindow window;
     sf::View view;
 
@@ -28,4 +30,7 @@ private:
     EntityController controller;
 
     void moveRandom(Entity& e, float maxStep);
+
+    bool isPanning = false;
+    sf::Vector2f lastMousePos;
 };

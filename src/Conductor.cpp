@@ -6,9 +6,23 @@
 #include <iostream>
 #include <cstdlib>  // rand, srand
 
-#define WINDOW_WIDTH    512
-#define WINDOW_HEIGHT   512
-#define TILE_SIZE       64
+// Fenêtre
+constexpr int WINDOW_WIDTH = 512;
+constexpr int WINDOW_HEIGHT = 512;
+constexpr float MAP_WIDTH = 2000.f;
+constexpr float MAP_HEIGHT = 2000.f;
+
+// Tuiles
+constexpr int TILE_SIZE = 64;
+
+// Zoom (Facteurs)
+constexpr float ZOOM_MIN = 0.3f;   // Zoom arrière maximum
+constexpr float ZOOM_MAX = 3.0f;   // Zoom avant maximum
+constexpr float ZOOM_SPEED = 0.1f; // Vitesse de zoom par cran de molette
+
+
+// Vitesse de déplacement joueur (exemple)
+constexpr float PLAYER_VELOCITY_STEP = 50.f;
 
 Conductor::Conductor()
     : window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Tilemap")
@@ -21,9 +35,9 @@ Conductor::Conductor()
     window.setFramerateLimit(60);
 
     // On remplit le vector d'ennemis
-    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*2, TILE_SIZE*3},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f));
-    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*4, TILE_SIZE*2},92,{TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f));
-    opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*6, TILE_SIZE*6},0,{TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f));
+    // opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*2, TILE_SIZE*3},0,{TILE_SIZE, TILE_SIZE}), sf::Color::Yellow, 0.f));
+    // opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*4, TILE_SIZE*2},92,{TILE_SIZE*2, TILE_SIZE}), sf::Color::Cyan, 0.f));
+    // opponents.emplace_back(Entity(RectangleShape(),Transform({TILE_SIZE*6, TILE_SIZE*6},0,{TILE_SIZE/3, TILE_SIZE/3}), sf::Color::Magenta, 0.f));
 }
 
 void Conductor::run() {
@@ -39,6 +53,47 @@ void Conductor::run() {
 
 void Conductor::processEvents() {
     while(const std::optional event = window.pollEvent()) {
+
+        // --- Gestion du Panning ---
+        if (auto mouseBtn = event->getIf<sf::Event::MouseButtonPressed>()) {
+            if (mouseBtn->button == sf::Mouse::Button::Left) {
+                isPanning = true;
+                // On utilise mapPixelToCoords pour avoir la position dans le monde
+                lastMousePos = window.mapPixelToCoords(mouseBtn->position);
+            }
+        }
+
+        if (auto mouseBtn = event->getIf<sf::Event::MouseButtonReleased>()) {
+            if (mouseBtn->button == sf::Mouse::Button::Left) {
+                isPanning = false;
+            }
+        }
+
+        if (auto mouseMove = event->getIf<sf::Event::MouseMoved>()) {
+            if (isPanning) {
+                // 1. Calculer la position actuelle de la souris avec la vue actuelle
+                sf::Vector2f currentMousePos = window.mapPixelToCoords(mouseMove->position);
+                
+                // 2. Calculer le delta
+                sf::Vector2f delta = lastMousePos - currentMousePos;
+                
+                // 3. Déplacer la vue
+                view.move(delta);
+                //clampView();
+                
+                // 4. IMPORTANT : On met à jour lastMousePos, MAIS en se basant sur 
+                // la nouvelle vue, on doit compenser le delta pour que le 
+                // prochain calcul soit basé sur le même point dans le monde.
+                // OU, plus simplement, on utilise la position brute du clic 
+                // mais c'est complexe.
+                
+                // SOLUTION LA PLUS STABLE :
+                // On met à jour lastMousePos en ajoutant le delta au "nouveau" point.
+                lastMousePos = currentMousePos + delta;
+            }
+        }
+        // --- Fin du Panning ---
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             player.setVelocity(player.getVelocity() + 50);
         }
@@ -51,10 +106,40 @@ void Conductor::processEvents() {
             window.close();
 
         if(auto wheelEvent = event->getIf<sf::Event::MouseWheelScrolled>()) {
-            float delta = wheelEvent->delta;
-            delta = -delta;
-            float zoomFactor = 1.0f + delta * 0.1f;
-            if (zoomFactor > 0.0f) view.zoom(zoomFactor);
+            float delta = -wheelEvent->delta; 
+            float zoomFactor = 1.0f + delta * ZOOM_SPEED;
+            
+            if (zoomFactor > 0.0f) {
+                // 1. Position du curseur dans le monde AVANT le zoom
+                // On force la vue actuelle dans la fenêtre pour être sûr du calcul
+                window.setView(view);
+                sf::Vector2f mousePosBefore = window.mapPixelToCoords(wheelEvent->position);
+                
+                // 2. Application du zoom
+                view.zoom(zoomFactor);
+                
+                // 3. Application des limites de taille (Min/Max)
+                float minSize = WINDOW_WIDTH * ZOOM_MIN;
+                float maxSize = WINDOW_WIDTH * ZOOM_MAX;
+                
+                sf::Vector2f newSize = view.getSize();
+                if (newSize.x < minSize) newSize = {minSize, minSize};
+                if (newSize.x > maxSize) newSize = {maxSize, maxSize};
+                view.setSize(newSize);
+                
+                // 4. On remet la vue zoomée dans la fenêtre pour calculer la nouvelle position
+                window.setView(view);
+                sf::Vector2f mousePosAfter = window.mapPixelToCoords(wheelEvent->position);
+                
+                // 5. Décalage pour "ancrer" le point sous le curseur
+                view.move(mousePosBefore - mousePosAfter);
+                
+                // 6. On applique les limites de panning (la carte)
+                //clampView();
+                
+                // 7. Update final de la vue
+                window.setView(view);
+            }
         }
     }
 }
@@ -67,6 +152,23 @@ RectangleShape getCollisionBox(Entity& entity, float dt) {
     Vec2f rightPoint = realShape.getExtreme(Direction::Right) + Vec2f{vdt, 0}*2;
     Vec2f bottomPoint = realShape.getExtreme(Direction::Bottom) + Vec2f{0, vdt}*2;
     return RectangleShape({leftPoint.x, bottomPoint.y}, {rightPoint.x, topPoint.y});
+}
+
+void Conductor::clampView() {
+    sf::Vector2f viewSize = view.getSize();
+    sf::Vector2f viewCenter = view.getCenter();
+
+    // Calcul des limites du rectangle de vue
+    float minX = viewSize.x / 2.f;
+    float maxX = MAP_WIDTH - (viewSize.x / 2.f);
+    float minY = viewSize.y / 2.f;
+    float maxY = MAP_HEIGHT - (viewSize.y / 2.f);
+
+    // On force le centre de la vue à rester dans ces limites
+    viewCenter.x = std::clamp(viewCenter.x, minX, maxX);
+    viewCenter.y = std::clamp(viewCenter.y, minY, maxY);
+
+    view.setCenter(viewCenter);
 }
 
 void Conductor::update(float dt) {
